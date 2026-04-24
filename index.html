@@ -83,7 +83,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 3rem;
+    padding: 10px 3rem 22px;
     background: linear-gradient(to bottom, rgba(10,8,5,0.92) 0%, rgba(10,8,5,0) 100%);
     backdrop-filter: blur(2px);
   }
@@ -180,20 +180,8 @@
     position: fixed;
     inset: 0;
     z-index: -1;
+    overflow: hidden;
   }
-
-  /* Letterbox bars — cinema aspect */
-  .hero-video-wrap::before,
-  .hero-video-wrap::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0;
-    height: 3vh;
-    background: var(--ink);
-    z-index: 2;
-  }
-  .hero-video-wrap::before { top: 0; }
-  .hero-video-wrap::after  { bottom: 0; }
 
   .hero-video-wrap video {
     position: absolute;
@@ -205,15 +193,15 @@
     display: block;
   }
 
-  /* YouTube iframe — scale to cover full viewport */
+  /* YouTube iframe — always cover full viewport regardless of screen ratio */
   .hero-video-wrap iframe {
     position: absolute;
     top: 50%;
     left: 50%;
+    /* Use max() to ensure both dimensions are always fully covered */
+    width: max(100vw, 177.78vh);  /* 16/9 × 100vh */
+    height: max(100vh, 56.25vw); /* 9/16 × 100vw */
     transform: translate(-50%, -50%);
-    width: 177.78vh; /* 16/9 * 100vh */
-    height: 100vh;
-    min-width: 100vw;
     border: none;
     pointer-events: none;
   }
@@ -603,12 +591,15 @@
     pointer-events: none;
   }
 
-  /* YouTube iframe in work cards — scale to cover 9:16 */
+  /* YouTube iframe in work cards — cover entire card */
   .work-card iframe.work-card-video {
     position: absolute;
-    top: 50%; left: 50%;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    /* Portrait 9:16 video: make height fill card, then scale width proportionally.
+       Use whichever is bigger to ensure full cover with no black bars */
+    width: max(100%, 56.25%);
+    height: max(100%, 177.78%);
     transform: translate(-50%, -50%);
     border: none;
     pointer-events: none;
@@ -1311,6 +1302,7 @@
     height: auto;
     display: block;
     object-fit: contain;
+    margin-left: auto;
   }
 
   .instructor-img-placeholder::before {
@@ -1580,7 +1572,8 @@
          Link: href="..." -->
     <div class="work-card" style="background:#1A1610;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X&sz=w600" alt="Sprite">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
         <div class="shape-ring" style="width:160px;height:160px;border-color:rgba(201,168,76,0.2);animation-delay:0s;"></div>
         <div class="shape-ring" style="width:100px;height:100px;border-color:rgba(201,168,76,0.35);animation-delay:0.8s;"></div>
@@ -1591,7 +1584,8 @@
     <!-- CARD 2 — từ TRÊN -->
     <div class="work-card" style="background:#160F0F;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG&sz=w600" alt="Milo">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/u-BKQ7745vU?autoplay=1&mute=1&loop=1&playlist=u-BKQ7745vU&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/u-BKQ7745vU?autoplay=1&mute=1&loop=1&playlist=u-BKQ7745vU&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;transition:opacity 0.5s;">
           <polygon points="150,20 280,180 20,180" fill="none" stroke="#B84A2E" stroke-width="1"/>
@@ -1604,7 +1598,8 @@
     <!-- CARD 3 — từ PHẢI -->
     <div class="work-card" style="background:#0D1515;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g&sz=w600" alt="Rockstar">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;">
           <circle cx="60" cy="100" r="50" fill="none" stroke="#1D9E75" stroke-width="1"/>
@@ -2016,6 +2011,18 @@
     });
   }, { threshold: 0 });
   if (heroEl) heroObs.observe(heroEl);
+
+  // Toggle mute on work card iframes via YouTube postMessage API
+  function toggleCardMute(btn) {
+    const iframe = btn.previousElementSibling;
+    const isMuted = btn.textContent.trim() === 'Unmute';
+    // postMessage to YouTube player
+    iframe.contentWindow.postMessage(
+      JSON.stringify({ event: 'command', func: isMuted ? 'unMute' : 'mute', args: [] }),
+      '*'
+    );
+    btn.textContent = isMuted ? 'Mute' : 'Unmute';
+  }
 
   // Hover on work cards — reveal SVG
   document.querySelectorAll('.work-card svg').forEach(svg => {
