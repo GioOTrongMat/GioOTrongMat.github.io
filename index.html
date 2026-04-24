@@ -128,7 +128,7 @@
   }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Unmute button */
+  /* Unmute button — transparent by default, appears on hover */
   #unmuteBtn {
     position: absolute;
     top: 50%;
@@ -139,17 +139,17 @@
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--ink);
-    background: rgba(245,240,232,0.92);
+    color: rgba(245,240,232,0.5);
+    background: transparent;
     border: none;
     padding: 0.8rem 2rem;
     border-radius: 100px;
     cursor: pointer;
-    transition: opacity 0.3s, background 0.3s, transform 0.3s;
-    backdrop-filter: blur(4px);
+    transition: color 0.3s, background 0.3s, transform 0.3s;
   }
 
   #unmuteBtn:hover {
+    color: var(--ink);
     background: var(--gold);
     transform: translate(-50%, -50%) scale(1.05);
   }
@@ -588,6 +588,7 @@
     object-fit: cover;
     object-position: center;
     display: block;
+    opacity: 1;
     transition: opacity 0.4s ease;
     z-index: 2;
   }
@@ -1523,7 +1524,7 @@
     <!-- Image — from left -->
     <div class="instructor-img-wrap" id="ins-img">
       <div class="instructor-img-placeholder" style="background:transparent;overflow:visible;border:none;">
-        <img src="https://drive.google.com/uc?export=view&id=1wKtolLz_ezrYvPdhvgY35jy6YGENLepr" alt="Gió Ở Trong Mắt" style="width:100%;height:auto;display:block;object-fit:contain;">
+        <img src="https://drive.google.com/thumbnail?id=1wKtolLz_ezrYvPdhvgY35jy6YGENLepr&sz=w800" alt="Gió Ở Trong Mắt" style="width:100%;height:auto;display:block;object-fit:contain;">
       </div>
     </div>
 
@@ -1569,7 +1570,7 @@
          Video hover: src="video1.mp4"
          Link: href="..." -->
     <div class="work-card" style="background:#1A1610;">
-      <img class="work-card-cover" src="https://drive.google.com/uc?export=view&id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X" alt="Sprite">
+      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X&sz=w600" alt="Sprite">
       <iframe class="work-card-video" src="https://drive.google.com/file/d/1Yk5afw7B0xIWbwWMVVksiYArZ0Niu_OQ/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
       <div class="card-shape">
         <div class="shape-ring" style="width:160px;height:160px;border-color:rgba(201,168,76,0.2);animation-delay:0s;"></div>
@@ -1580,7 +1581,7 @@
 
     <!-- CARD 2 — từ TRÊN -->
     <div class="work-card" style="background:#160F0F;">
-      <img class="work-card-cover" src="https://drive.google.com/uc?export=view&id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG" alt="Milo">
+      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG&sz=w600" alt="Milo">
       <iframe class="work-card-video" src="https://drive.google.com/file/d/18zPZyI1hvWstc7LSCNMHlghcBR4yBb9d/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;transition:opacity 0.5s;">
@@ -1593,7 +1594,7 @@
 
     <!-- CARD 3 — từ PHẢI -->
     <div class="work-card" style="background:#0D1515;">
-      <img class="work-card-cover" src="https://drive.google.com/uc?export=view&id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g" alt="Rockstar">
+      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g&sz=w600" alt="Rockstar">
       <iframe class="work-card-video" src="https://drive.google.com/file/d/1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;">
