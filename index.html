@@ -205,6 +205,21 @@
     display: block;
   }
 
+  /* YouTube iframe — scale to cover full viewport */
+  .hero-video-wrap iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Force 16:9 to always cover viewport */
+    width: 100vw;
+    height: 56.25vw; /* 100 / 16 * 9 */
+    min-height: 100vh;
+    min-width: 177.78vh; /* 100 / 9 * 16 */
+    border: none;
+    pointer-events: none;
+  }
+
   /* Placeholder when no video */
   .hero-video-placeholder {
     position: absolute;
@@ -557,11 +572,12 @@
     aspect-ratio: 9/16;
   }
 
-  /* Card as link */
+  /* Card — now a div, no link */
   .work-card {
     text-decoration: none;
     color: inherit;
     display: block;
+    cursor: default;
   }
 
   /* Cover image — shown by default */
@@ -581,17 +597,16 @@
     position: absolute;
     inset: 0;
     width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+    border: none;
     opacity: 0;
     transition: opacity 0.4s ease;
     z-index: 3;
+    pointer-events: none;
   }
 
-  /* When hovered: hide cover, show video */
+  /* When hovered: hide cover, show video/iframe */
   .work-card:hover .work-card-cover { opacity: 0; }
-  .work-card:hover .work-card-video  { opacity: 1; }
+  .work-card:hover .work-card-video  { opacity: 1; pointer-events: auto; }
 
   /* Link indicator on hover */
   /* Unmute button on work cards */
@@ -1441,7 +1456,6 @@
   <div class="hero-video-wrap">
     <iframe id="heroYT"
       src="https://www.youtube.com/embed/e45dsJIzdSs?autoplay=1&mute=1&loop=1&playlist=e45dsJIzdSs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-      style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"
       allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 
@@ -1509,7 +1523,7 @@
     <!-- Image — from left -->
     <div class="instructor-img-wrap" id="ins-img">
       <div class="instructor-img-placeholder" style="background:transparent;overflow:visible;border:none;">
-        <img src="portrait.png" alt="Gió Ở Trong Mắt" style="width:100%;height:auto;display:block;object-fit:contain;">
+        <img src="https://drive.google.com/uc?export=view&id=1wKtolLz_ezrYvPdhvgY35jy6YGENLepr" alt="Gió Ở Trong Mắt" style="width:100%;height:auto;display:block;object-fit:contain;">
       </div>
     </div>
 
@@ -1554,22 +1568,20 @@
          Ảnh bìa: src="cover1.jpg"
          Video hover: src="video1.mp4"
          Link: href="..." -->
-    <a class="work-card" href="#" target="_blank" style="background:#1A1610;">
-      <img class="work-card-cover" src="sprite.png" alt="Sprite">
-      <video class="work-card-video" src="video1.mp4" loop muted playsinline></video>
+    <div class="work-card" style="background:#1A1610;">
+      <img class="work-card-cover" src="https://drive.google.com/uc?export=view&id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X" alt="Sprite">
+      <iframe class="work-card-video" src="https://drive.google.com/file/d/1Yk5afw7B0xIWbwWMVVksiYArZ0Niu_OQ/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
       <div class="card-shape">
         <div class="shape-ring" style="width:160px;height:160px;border-color:rgba(201,168,76,0.2);animation-delay:0s;"></div>
         <div class="shape-ring" style="width:100px;height:100px;border-color:rgba(201,168,76,0.35);animation-delay:0.8s;"></div>
         <div class="shape-ring" style="width:50px;height:50px;border-color:rgba(201,168,76,0.5);animation-delay:1.6s;"></div>
       </div>
-      <div class="work-card-link-icon"></div>
-      <button class="card-unmute-btn" data-muted="true">Unmute</button>
-    </a>
+    </div>
 
     <!-- CARD 2 — từ TRÊN -->
-    <a class="work-card" href="#" target="_blank" style="background:#160F0F;">
-      <img class="work-card-cover" src="milo.png" alt="Milo">
-      <video class="work-card-video" src="video2.mp4" loop muted playsinline></video>
+    <div class="work-card" style="background:#160F0F;">
+      <img class="work-card-cover" src="https://drive.google.com/uc?export=view&id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG" alt="Milo">
+      <iframe class="work-card-video" src="https://drive.google.com/file/d/18zPZyI1hvWstc7LSCNMHlghcBR4yBb9d/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;transition:opacity 0.5s;">
           <polygon points="150,20 280,180 20,180" fill="none" stroke="#B84A2E" stroke-width="1"/>
@@ -1577,14 +1589,12 @@
           <polygon points="150,80 220,160 80,160" fill="none" stroke="#B84A2E" stroke-width="0.5"/>
         </svg>
       </div>
-      <div class="work-card-link-icon"></div>
-      <button class="card-unmute-btn" data-muted="true">Unmute</button>
-    </a>
+    </div>
 
     <!-- CARD 3 — từ PHẢI -->
-    <a class="work-card" href="#" target="_blank" style="background:#0D1515;">
-      <img class="work-card-cover" src="rockstar.png" alt="Rockstar">
-      <video class="work-card-video" src="video3.mp4" loop muted playsinline></video>
+    <div class="work-card" style="background:#0D1515;">
+      <img class="work-card-cover" src="https://drive.google.com/uc?export=view&id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g" alt="Rockstar">
+      <iframe class="work-card-video" src="https://drive.google.com/file/d/1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;">
           <circle cx="60" cy="100" r="50" fill="none" stroke="#1D9E75" stroke-width="1"/>
@@ -1593,9 +1603,7 @@
           <circle cx="150" cy="100" r="20" fill="rgba(29,158,117,0.3)"/>
         </svg>
       </div>
-      <div class="work-card-link-icon"></div>
-      <button class="card-unmute-btn" data-muted="true">Unmute</button>
-    </a>
+    </div>
   </div>
 </section>
 
@@ -1965,46 +1973,28 @@
     sliderScrollObs.observe(sliderOuter);
   }
 
-  // Work card hover: auto play WITH sound on enter, mute+pause on leave
+  // Work card hover: show Drive iframe on enter, hide on leave
   document.querySelectorAll('.work-card').forEach(card => {
     const vid = card.querySelector('.work-card-video');
-    const btn = card.querySelector('.card-unmute-btn');
     if (!vid) return;
+    const isIframe = vid.tagName === 'IFRAME';
 
     card.addEventListener('mouseenter', () => {
-      vid.currentTime = 0;
-      vid.muted = false;
-      vid.volume = 0.8;
-      vid.play().catch(() => {
-        // If browser blocks unmuted autoplay, fallback to muted
-        vid.muted = true;
-        vid.play();
-      });
+      if (!isIframe) {
+        vid.currentTime = 0;
+        vid.muted = false;
+        vid.volume = 0.8;
+        vid.play().catch(() => { vid.muted = true; vid.play(); });
+      }
     });
 
     card.addEventListener('mouseleave', () => {
-      vid.pause();
-      vid.currentTime = 0;
-      vid.muted = true;
-      if (btn) { btn.textContent = 'Unmute'; btn.dataset.muted = 'true'; }
+      if (!isIframe) {
+        vid.pause();
+        vid.currentTime = 0;
+        vid.muted = true;
+      }
     });
-
-    if (btn) {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (btn.dataset.muted === 'true') {
-          vid.muted = false;
-          vid.volume = 0.8;
-          btn.textContent = 'Mute';
-          btn.dataset.muted = 'false';
-        } else {
-          vid.muted = true;
-          btn.textContent = 'Unmute';
-          btn.dataset.muted = 'true';
-        }
-      });
-    }
   });
 
   // Hide fixed video bg when scrolled past hero
