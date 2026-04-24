@@ -81,7 +81,7 @@
     top: 0; left: 0; right: 0;
     z-index: 100;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 10px 3rem 22px;
     background: linear-gradient(to bottom, rgba(10,8,5,0.92) 0%, rgba(10,8,5,0) 100%);
@@ -97,6 +97,9 @@
     text-decoration: none;
     opacity: 0;
     animation: fadeDown 0.8s ease 0.2s forwards;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .nav-links {
@@ -105,6 +108,7 @@
     list-style: none;
     opacity: 0;
     animation: fadeDown 0.8s ease 0.4s forwards;
+    margin-left: auto;
   }
 
   .nav-links a {
@@ -128,12 +132,12 @@
   }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Unmute button — hidden by default, shows on hero hover (only while muted) */
+  /* Unmute button — always visible at 10%, full on hero hover (only while muted) */
   #unmuteBtn {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.92);
+    transform: translate(-50%, -50%) scale(1);
     z-index: 5;
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
@@ -149,10 +153,43 @@
     pointer-events: none;
     transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s;
   }
+  /* Hero unmute/mute button */
+  #unmuteBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #0a0805;
+    background: #ffffff;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 100px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.3s;
+  }
+  /* Muted state: hidden, reveal fully on hero hover */
+  #unmuteBtn.is-muted {
+    opacity: 0;
+    pointer-events: none;
+  }
   #hero:hover #unmuteBtn.is-muted {
     opacity: 1;
     pointer-events: auto;
-    transform: translate(-50%, -50%) scale(1);
+  }
+  /* Unmuted state: always 10%, hover shows 100% */
+  #unmuteBtn:not(.is-muted) {
+    opacity: 0.1;
+    pointer-events: auto;
+  }
+  #hero:hover #unmuteBtn:not(.is-muted) {
+    opacity: 1;
   }
   #unmuteBtn:hover { background: var(--gold); }
 
@@ -160,7 +197,7 @@
   .yt-blocker {
     position: absolute;
     inset: 0;
-    z-index: 4;
+    z-index: 3;
     background: transparent;
     pointer-events: auto;
   }
@@ -2040,9 +2077,9 @@
 
   // Toggle mute on work card iframes via YouTube postMessage API
   function toggleCardMute(btn) {
-    const iframe = btn.previousElementSibling;
+    const card = btn.closest('.work-card');
+    const iframe = card.querySelector('.work-card-video');
     const isMuted = btn.textContent.trim() === 'Unmute';
-    // postMessage to YouTube player
     iframe.contentWindow.postMessage(
       JSON.stringify({ event: 'command', func: isMuted ? 'unMute' : 'mute', args: [] }),
       '*'
