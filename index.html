@@ -508,11 +508,13 @@
 
   .section-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
     margin-bottom: 4rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
     padding-bottom: 2rem;
+    text-align: center;
+    position: relative;
   }
 
   .section-num {
@@ -538,6 +540,7 @@
     border-bottom: 1px solid var(--mist);
     padding-bottom: 2px;
     transition: color 0.3s, border-color 0.3s;
+  }
   }
   .section-cta:hover { color: var(--gold); border-color: var(--gold); }
 
@@ -1618,7 +1621,6 @@
     <div>
       <h2 class="section-title">My Works</h2>
     </div>
-    <a href="#contact" class="section-cta">View All Works</a>
   </div>
 
   <div class="works-grid">
@@ -1640,8 +1642,8 @@
 
     <!-- CARD 2 — từ TRÊN -->
     <div class="work-card" style="background:#160F0F;">
-      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG&sz=w600" alt="Milo">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/u-BKQ7745vU?autoplay=1&mute=1&loop=1&playlist=u-BKQ7745vU&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1HnNKnVAvgqjY0v5wCfo0CHbPFJux9mhK&sz=w600" alt="Magi">
+      <video class="work-card-video" src="https://drive.google.com/uc?export=download&id=1JjwMI3lcJS_0erJoBlPqVwq5TpDuPSvw" loop playsinline></video>
       <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
@@ -1668,6 +1670,9 @@
         </svg>
       </div>
     </div>
+  </div>
+  <div style="text-align:center; margin-top: 3rem;">
+    <a href="#contact" class="section-cta">View All Works</a>
   </div>
 </section>
 
@@ -2046,14 +2051,16 @@
     if (!vid) return;
     const isIframe = vid.tagName === 'IFRAME';
 
+    // Init video element as muted
+    if (!isIframe) {
+      vid.muted = true;
+      vid.volume = 0.8;
+    }
+
     card.addEventListener('mouseenter', () => {
       if (!isIframe) {
-        vid.currentTime = 0;
-        vid.muted = false;
-        vid.volume = 0.8;
-        vid.play().catch(() => { vid.muted = true; vid.play(); });
+        vid.play().catch(() => {});
       } else {
-        // Resume YouTube playback on re-enter
         vid.contentWindow.postMessage(
           JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
         );
@@ -2063,10 +2070,7 @@
     card.addEventListener('mouseleave', () => {
       if (!isIframe) {
         vid.pause();
-        vid.currentTime = 0;
-        vid.muted = true;
       } else {
-        // Pause only when leaving card
         vid.contentWindow.postMessage(
           JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
         );
@@ -2087,12 +2091,18 @@
   // Toggle mute on work card iframes via YouTube postMessage API
   function toggleCardMute(btn) {
     const card = btn.closest('.work-card');
-    const iframe = card.querySelector('.work-card-video');
+    const iframe = card.querySelector('iframe.work-card-video');
+    const video = card.querySelector('video.work-card-video');
     const isMuted = btn.textContent.trim() === 'Unmute';
-    iframe.contentWindow.postMessage(
-      JSON.stringify({ event: 'command', func: isMuted ? 'unMute' : 'mute', args: [] }),
-      '*'
-    );
+    if (iframe) {
+      iframe.contentWindow.postMessage(
+        JSON.stringify({ event: 'command', func: isMuted ? 'unMute' : 'mute', args: [] }),
+        '*'
+      );
+    } else if (video) {
+      video.muted = !isMuted;
+      video.volume = isMuted ? 0.8 : 0;
+    }
     btn.textContent = isMuted ? 'Mute' : 'Unmute';
   }
 
