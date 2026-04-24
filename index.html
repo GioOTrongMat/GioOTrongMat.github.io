@@ -83,7 +83,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.2rem 3rem;
+    padding: 10px 3rem;
     background: linear-gradient(to bottom, rgba(10,8,5,0.92) 0%, rgba(10,8,5,0) 100%);
     backdrop-filter: blur(2px);
   }
@@ -172,7 +172,7 @@
     overflow: hidden;
     display: flex;
     align-items: flex-end;
-    padding: 0 0 10vh 10vw;
+    padding: 0 0 10vw 10vw;
   }
 
   /* Fixed video background — cinema feel */
@@ -188,7 +188,7 @@
     content: '';
     position: absolute;
     left: 0; right: 0;
-    height: 8vh;
+    height: 3vh;
     background: var(--ink);
     z-index: 2;
   }
@@ -211,11 +211,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* Force 16:9 to always cover viewport */
-    width: 100vw;
-    height: 56.25vw; /* 100 / 16 * 9 */
-    min-height: 100vh;
-    min-width: 177.78vh; /* 100 / 9 * 16 */
+    width: 177.78vh; /* 16/9 * 100vh */
+    height: 100vh;
+    min-width: 100vw;
     border: none;
     pointer-events: none;
   }
@@ -363,14 +361,14 @@
   /* Scroll indicator — fixed at bottom center, same layer as video */
   .hero-scroll {
     position: fixed;
-    bottom: 2.5rem;
+    bottom: 4vw;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    z-index: 1;
+    z-index: 3;
     opacity: 0;
     animation: fadeUp 1s ease 1.8s forwards;
   }
@@ -605,9 +603,20 @@
     pointer-events: none;
   }
 
-  /* When hovered: hide cover, show video/iframe */
+  /* YouTube iframe in work cards — scale to cover 9:16 */
+  .work-card iframe.work-card-video {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border: none;
+    pointer-events: none;
+  }
+
+  /* When hovered: hide cover, show iframe */
   .work-card:hover .work-card-cover { opacity: 0; }
-  .work-card:hover .work-card-video  { opacity: 1; pointer-events: auto; }
+  .work-card:hover .work-card-video  { opacity: 1; }
 
   /* Link indicator on hover */
   /* Unmute button on work cards */
@@ -1571,7 +1580,7 @@
          Link: href="..." -->
     <div class="work-card" style="background:#1A1610;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X&sz=w600" alt="Sprite">
-      <iframe class="work-card-video" src="https://drive.google.com/file/d/1Yk5afw7B0xIWbwWMVVksiYArZ0Niu_OQ/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"></iframe>
       <div class="card-shape">
         <div class="shape-ring" style="width:160px;height:160px;border-color:rgba(201,168,76,0.2);animation-delay:0s;"></div>
         <div class="shape-ring" style="width:100px;height:100px;border-color:rgba(201,168,76,0.35);animation-delay:0.8s;"></div>
@@ -1582,7 +1591,7 @@
     <!-- CARD 2 — từ TRÊN -->
     <div class="work-card" style="background:#160F0F;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG&sz=w600" alt="Milo">
-      <iframe class="work-card-video" src="https://drive.google.com/file/d/18zPZyI1hvWstc7LSCNMHlghcBR4yBb9d/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/u-BKQ7745vU?autoplay=1&mute=1&loop=1&playlist=u-BKQ7745vU&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"></iframe>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;transition:opacity 0.5s;">
           <polygon points="150,20 280,180 20,180" fill="none" stroke="#B84A2E" stroke-width="1"/>
@@ -1595,7 +1604,7 @@
     <!-- CARD 3 — từ PHẢI -->
     <div class="work-card" style="background:#0D1515;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g&sz=w600" alt="Rockstar">
-      <iframe class="work-card-video" src="https://drive.google.com/file/d/1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g/preview" style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;" allow="autoplay" allowfullscreen></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"></iframe>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;">
           <circle cx="60" cy="100" r="50" fill="none" stroke="#1D9E75" stroke-width="1"/>
