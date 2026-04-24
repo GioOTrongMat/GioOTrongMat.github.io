@@ -1125,6 +1125,9 @@
     grid-template-columns: 1fr 1fr;
     gap: 6rem;
     align-items: start;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .contact-title {
@@ -1630,7 +1633,7 @@
          Link: href="..." -->
     <div class="work-card" style="background:#1A1610;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X&sz=w600" alt="Sprite">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?mute=1embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&loop=1embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&playlist=PXFg4as2Szoembed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
@@ -1642,8 +1645,8 @@
 
     <!-- CARD 2 — từ TRÊN -->
     <div class="work-card" style="background:#160F0F;">
-      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1HnNKnVAvgqjY0v5wCfo0CHbPFJux9mhK&sz=w600" alt="Magi">
-      <video class="work-card-video" src="https://drive.google.com/uc?export=download&id=1JjwMI3lcJS_0erJoBlPqVwq5TpDuPSvw" loop playsinline></video>
+      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG&sz=w600" alt="Magi">
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/DXx1wLV-Pc8?autoplay=1&mute=1&loop=1&playlist=DXx1wLV-Pc8&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
@@ -1658,7 +1661,7 @@
     <!-- CARD 3 — từ PHẢI -->
     <div class="work-card" style="background:#0D1515;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g&sz=w600" alt="Rockstar">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?mute=1embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&loop=1embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&playlist=jXBKyWVtMnEembed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
@@ -2050,12 +2053,6 @@
     const vid = card.querySelector('.work-card-video');
     if (!vid) return;
     const isIframe = vid.tagName === 'IFRAME';
-
-    // Init video element as muted
-    if (!isIframe) {
-      vid.muted = true;
-      vid.volume = 0.8;
-    }
 
     card.addEventListener('mouseenter', () => {
       if (!isIframe) {
