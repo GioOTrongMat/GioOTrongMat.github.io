@@ -96,10 +96,9 @@
     text-transform: uppercase;
     text-decoration: none;
     opacity: 0;
-    animation: fadeDown 0.8s ease 0.2s forwards;
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    animation: fadeDownLogo 0.8s ease 0.2s forwards;
   }
 
   .nav-links {
@@ -183,13 +182,16 @@
     opacity: 1;
     pointer-events: auto;
   }
-  /* Unmuted state: always 10%, hover shows 100% */
+  /* Unmuted state: always 10%, only 100% when hovering the button itself */
   #unmuteBtn:not(.is-muted) {
     opacity: 0.1;
     pointer-events: auto;
   }
-  #hero:hover #unmuteBtn:not(.is-muted) {
+  #unmuteBtn:not(.is-muted):hover {
     opacity: 1;
+  }
+  #hero:hover #unmuteBtn:not(.is-muted) {
+    opacity: 0.1;
   }
   #unmuteBtn:hover { background: var(--gold); }
 
@@ -1271,6 +1273,11 @@
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-15px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDownLogo {
+    from { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
 
   @keyframes slideUp {
