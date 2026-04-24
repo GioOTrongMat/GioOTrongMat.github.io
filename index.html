@@ -128,30 +128,41 @@
   }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Unmute button — transparent by default, appears on hover */
+  /* Unmute button — hidden by default, shows on hero hover (only while muted) */
   #unmuteBtn {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.92);
     z-index: 5;
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: rgba(245,240,232,0.5);
-    background: transparent;
+    color: #0a0805;
+    background: #ffffff;
     border: none;
-    padding: 0.8rem 2rem;
+    padding: 0.75rem 2rem;
     border-radius: 100px;
     cursor: pointer;
-    transition: color 0.3s, background 0.3s, transform 0.3s;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s;
   }
+  #hero:hover #unmuteBtn.is-muted {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  #unmuteBtn:hover { background: var(--gold); }
 
-  #unmuteBtn:hover {
-    color: var(--ink);
-    background: var(--gold);
-    transform: translate(-50%, -50%) scale(1.05);
+  /* Transparent div to block YouTube native controls on hover */
+  .yt-blocker {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    background: transparent;
+    pointer-events: auto;
   }
 
   /* Overlay — normal dark, lighter when unmuted */
@@ -631,13 +642,11 @@
     transition: opacity 0.3s, transform 0.3s, background 0.3s;
     pointer-events: none;
   }
-
   .work-card:hover .card-unmute-btn {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
-
   .card-unmute-btn:hover { background: var(--gold); }
 
   .work-card-link-icon {
@@ -1459,13 +1468,14 @@
     <iframe id="heroYT"
       src="https://www.youtube.com/embed/e45dsJIzdSs?autoplay=1&mute=1&loop=1&playlist=e45dsJIzdSs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
       allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <div class="yt-blocker"></div>
   </div>
 
   <!-- Cinematic overlay — dims on mute, brightens on unmute -->
   <div class="hero-overlay" id="heroOverlay"></div>
 
   <!-- Unmute button -->
-  <button id="unmuteBtn" onclick="toggleMute()">Unmute</button>
+  <button id="unmuteBtn" class="is-muted" onclick="toggleMute()">Unmute</button>
 
   <!-- Content — bottom left -->
   <div class="hero-content">
@@ -1573,6 +1583,7 @@
     <div class="work-card" style="background:#1A1610;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X&sz=w600" alt="Sprite">
       <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
         <div class="shape-ring" style="width:160px;height:160px;border-color:rgba(201,168,76,0.2);animation-delay:0s;"></div>
@@ -1585,6 +1596,7 @@
     <div class="work-card" style="background:#160F0F;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG&sz=w600" alt="Milo">
       <iframe class="work-card-video" src="https://www.youtube.com/embed/u-BKQ7745vU?autoplay=1&mute=1&loop=1&playlist=u-BKQ7745vU&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;transition:opacity 0.5s;">
@@ -1599,6 +1611,7 @@
     <div class="work-card" style="background:#0D1515;">
       <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g&sz=w600" alt="Rockstar">
       <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;">
@@ -1736,11 +1749,14 @@
     if (isMuted) {
       ytPlayer.unMute();
       ytPlayer.setVolume(80);
+      // After unmute: remove is-muted so button stays hidden permanently
+      btn.classList.remove('is-muted');
       btn.textContent = 'Mute';
       overlay.classList.add('unmuted');
       isMuted = false;
     } else {
       ytPlayer.mute();
+      btn.classList.add('is-muted');
       btn.textContent = 'Unmute';
       overlay.classList.remove('unmuted');
       isMuted = true;
@@ -1978,7 +1994,7 @@
     sliderScrollObs.observe(sliderOuter);
   }
 
-  // Work card hover: show Drive iframe on enter, hide on leave
+  // Work card hover: play/pause YouTube iframe, pause on leave if unmuted
   document.querySelectorAll('.work-card').forEach(card => {
     const vid = card.querySelector('.work-card-video');
     if (!vid) return;
@@ -1990,6 +2006,11 @@
         vid.muted = false;
         vid.volume = 0.8;
         vid.play().catch(() => { vid.muted = true; vid.play(); });
+      } else {
+        // Resume YouTube playback on re-enter
+        vid.contentWindow.postMessage(
+          JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
+        );
       }
     });
 
@@ -1998,6 +2019,11 @@
         vid.pause();
         vid.currentTime = 0;
         vid.muted = true;
+      } else {
+        // Pause only when leaving card
+        vid.contentWindow.postMessage(
+          JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
+        );
       }
     });
   });
