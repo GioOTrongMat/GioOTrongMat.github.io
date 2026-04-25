@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gió Ở Trong Mắt | FPV Cinematic</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHBvbHlnb24gcG9pbnRzPSIxNiwyIDE5LDEyIDI5LDE2IDE5LDIwIDE2LDMwIDEzLDIwIDMsMTYgMTMsMTIiIGZpbGw9IiNDOUE4NEMiLz4KPC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
 <script src="https://www.youtube.com/iframe_api"></script>
 <style>
   @font-face {
@@ -101,18 +102,25 @@
     animation: fadeDownLogo 0.8s ease 0.2s forwards;
   }
 
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: flex-end;
+    grid-column: 3;
+  }
+
   .nav-links {
     display: flex;
     gap: 2.5rem;
     list-style: none;
     opacity: 0;
     animation: fadeDown 0.8s ease 0.4s forwards;
-    grid-column: 3;
-    justify-content: flex-end;
   }
 
   .nav-links a {
-    font-family: 'Space Mono', monospace;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 0.7rem;
     letter-spacing: 0.2em;
     color: var(--cream);
@@ -418,9 +426,10 @@
   }
 
   .hero-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     text-decoration: none;
     padding: 0.85rem 2rem;
@@ -571,7 +580,8 @@
   }
 
   .section-num {
-    font-family: 'Space Mono', monospace;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 0.65rem;
     color: var(--gold);
     letter-spacing: 0.3em;
@@ -1250,10 +1260,11 @@
   }
 
   .contact-sub {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 1rem;
     color: var(--mist);
     line-height: 1.8;
-    font-weight: 300;
     margin-bottom: 2rem;
   }
 
@@ -1287,7 +1298,8 @@
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 2px;
     padding: 1rem 1.2rem;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 1rem;
     color: var(--cream);
     outline: none;
@@ -1308,7 +1320,8 @@
 
   .contact-submit {
     margin-top: 1.5rem;
-    font-family: 'Space Mono', monospace;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
@@ -1513,7 +1526,8 @@
   .instructor-text.reveal { opacity: 1; transform: translateX(0); }
 
   .instructor-eyebrow {
-    font-family: 'Space Mono', monospace;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     font-size: 0.6rem;
     letter-spacing: 0.35em;
     color: var(--gold);
@@ -1530,6 +1544,7 @@
   }
 
   .instructor-bio {
+    font-family: 'Roboto', sans-serif;
     font-size: clamp(1rem, 1.5vw, 1.5rem);
     color: var(--mist);
     line-height: 1.8;
@@ -1608,6 +1623,86 @@
     .instructor-layout { grid-template-columns: 1fr; gap: 2rem; }
     .instructor-img-placeholder img { max-width: 80%; margin: 0 auto; }
   }
+
+  /* ── LANGUAGE SWITCH ── */
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    justify-self: start;
+    align-self: center;
+  }
+  .lang-switch-label {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.35);
+    transition: color 0.3s ease;
+    min-width: 1.6rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .lang-switch.is-en .lang-label-en,
+  .lang-switch.is-vi .lang-label-vi {
+    color: var(--cream);
+  }
+  .lang-switch-track {
+    position: relative;
+    width: 3.8rem;
+    height: 2rem;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12));
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow:
+      inset 0 4px 10px rgba(0,0,0,0.7),
+      inset 0 1px 3px rgba(0,0,0,0.5),
+      0 1px 1px rgba(255,255,255,0.08);
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+  }
+  .lang-switch:hover .lang-switch-track {
+    background: rgba(255,255,255,0.13);
+  }
+  .lang-switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.18rem;
+    transform: translateY(-50%);
+    width: 1.65rem;
+    height: 1.65rem;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ffffff, #d0d0d0);
+    box-shadow:
+      0 4px 10px rgba(0,0,0,0.6),
+      0 2px 4px rgba(0,0,0,0.4),
+      0 1px 1px rgba(255,255,255,0.3) inset,
+      0 -1px 2px rgba(0,0,0,0.3) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: left 0.35s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.2s ease;
+  }
+  .lang-switch-thumb:hover {
+    box-shadow:
+      0 6px 14px rgba(0,0,0,0.7),
+      0 3px 6px rgba(0,0,0,0.5),
+      0 1px 1px rgba(255,255,255,0.3) inset;
+  }
+  .lang-switch-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+  .lang-switch.is-vi .lang-switch-thumb {
+    left: calc(100% - 1.83rem);
+  }
+
 </style>
 </head>
 <body>
@@ -1617,14 +1712,23 @@
 
 <!-- NAV -->
 <nav>
+  <div class="lang-switch" id="langSwitch" onclick="toggleLang()" aria-label="Toggle language" role="button">
+    <span class="lang-switch-label lang-label-en">EN</span>
+    <div class="lang-switch-track">
+      <div class="lang-switch-thumb" id="langThumb"><img id="langFlag" src="https://flagcdn.com/w40/gb.png" alt="EN"></div>
+    </div>
+    <span class="lang-switch-label lang-label-vi">VI</span>
+  </div>
   <a href="#" class="nav-logo">
     <img src="logo.png" alt="Gió ở trong mắt" style="height:42px;width:auto;padding-top:2px;">
   </a>
-  <ul class="nav-links">
-    <li><a href="#works">My Works</a></li>
-    <li><a href="#process">My Projects</a></li>
-    <li><a href="#instructor">About Me</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#works" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a></li>
+      <li><a href="#process" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
+      <li><a href="#instructor" data-en="About Me" data-vi="Về Mình">About Me</a></li>
+    </ul>
+  </div>
   <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()" aria-label="Menu">
     <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
       <rect y="0" width="22" height="2" rx="1" fill="currentColor"/>
@@ -1637,9 +1741,9 @@
 <!-- Mobile menu dropdown -->
 <div class="nav-mobile-menu" id="navMobileMenu">
   <ul>
-    <li><a href="#works" onclick="toggleMenu()">My Works</a></li>
-    <li><a href="#process" onclick="toggleMenu()">My Projects</a></li>
-    <li><a href="#instructor" onclick="toggleMenu()">About Me</a></li>
+    <li><a href="#works" onclick="toggleMenu()" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a></li>
+    <li><a href="#process" onclick="toggleMenu()" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
+    <li><a href="#instructor" onclick="toggleMenu()" data-en="About Me" data-vi="Về Mình">About Me</a></li>
   </ul>
 </div>
 
@@ -1667,16 +1771,16 @@
       <span class="line">Cinematic.</span>
       <span class="line">Creator.</span>
     </h1>
-    <p class="hero-sub">FPV Pilot · Filmmaker · Content Creator</p>
+    <p class="hero-sub" >FPV Pilot · Filmmaker · Content Creator</p>
     <div class="hero-ctas">
-      <a href="#works" class="hero-btn hero-btn-primary">My Works</a>
-      <a href="#instructor" class="hero-btn hero-btn-secondary">About Me</a>
+      <a href="#works" class="hero-btn hero-btn-primary" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a>
+      <a href="#instructor" class="hero-btn hero-btn-secondary" data-en="About Me" data-vi="Về Mình">About Me</a>
     </div>
   </div>
 
   <!-- Scroll -->
   <div class="hero-scroll">
-    <span class="scroll-text">Scroll</span>
+    <span class="scroll-text" data-en="Scroll" data-vi="Cuộn xuống">Scroll</span>
     <div class="scroll-line"></div>
   </div>
 </section>
@@ -1723,14 +1827,19 @@
 
     <!-- Text — from right -->
     <div class="instructor-text" id="ins-text">
-      <p class="instructor-eyebrow">About Me</p>
+      <p class="instructor-eyebrow" data-en="About Me" data-vi="Về Mình">About Me</p>
       <h2 class="instructor-name">Gió Ở Trong Mắt</h2>
       <p class="instructor-bio">
-        I started out in graphic design, directly involved in building visual identities for major brands in the Vietnamese market such as Anker, UAG,... Over time, I realized that conveying messages through visuals alone wasn't enough to satisfy my creative needs and push my limits — so I made the shift into content production.
+        <span data-lang="en">I started out in graphic design, directly involved in building visual identities for major brands in the Vietnamese market such as Anker, UAG,... Over time, I realized that conveying messages through visuals alone wasn't enough to satisfy my creative needs and push my limits — so I made the shift into content production.
         <br><br>
         Over more than 3 years on TikTok, I've had the opportunity to collaborate with brands of all sizes, including Sprite and Milo,… building up experience in storytelling, concept development, and connecting with audiences.
         <br><br>
-        Right now, I'm on a journey searching for inspiration — not just to keep making content, but to redefine the way I tell stories and create value in my creative work.
+        Right now, I'm on a journey searching for inspiration — not just to keep making content, but to redefine the way I tell stories and create value in my creative work.</span>
+        <span data-lang="vi" style="display:none;">Mình bắt đầu từ thiết kế đồ hoạ, trực tiếp xây dựng nhận diện thương hiệu cho các nhãn hàng lớn tại thị trường Việt Nam như Anker, UAG,... Dần dần, mình nhận ra rằng chỉ truyền tải thông điệp qua hình ảnh tĩnh là chưa đủ để thoả mãn nhu cầu sáng tạo và vượt qua giới hạn của bản thân — nên mình chuyển sang sản xuất nội dung.
+        <br><br>
+        Hơn 3 năm làm TikTok, mình đã có cơ hội hợp tác với các thương hiệu lớn nhỏ, bao gồm Sprite, Milo,… tích luỹ kinh nghiệm kể chuyện, phát triển concept và kết nối với khán giả.
+        <br><br>
+        Hiện tại, mình đang trên hành trình tìm kiếm cảm hứng — không chỉ để tiếp tục làm nội dung, mà để định nghĩa lại cách mình kể chuyện và tạo ra giá trị trong công việc sáng tạo.</span>
       </p>
       <div class="instructor-tags">
         <span class="job-tag">Graphic Design</span>
@@ -1743,8 +1852,11 @@
 
   <!-- Quote — from bottom -->
   <div class="instructor-quote-wrap" id="ins-quote">
-    <p class="instructor-quote">Logic will get you from A to B.<br>Imagination will take you everywhere</p>
-    <p style="text-align:center;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--mist);margin-top:1.2rem;">— Albert Einstein —</p>
+    <p class="instructor-quote">
+      <span data-lang="en">Logic will get you from A to B.<br>Imagination will take you everywhere</span>
+      <span data-lang="vi" style="display:none;">Logic sẽ đưa bạn từ A đến B.<br>Trí tưởng tượng sẽ đưa bạn đến mọi nơi</span>
+    </p>
+    <p style="text-align:center;font-family:'Roboto',sans-serif;font-weight:500;font-size:0.8rem;letter-spacing:0.15em;color:var(--mist);margin-top:1.2rem;">— Albert Einstein —</p>
   </div>
 </section>
 
@@ -1752,7 +1864,7 @@
 <section id="works">
   <div class="section-header">
     <div>
-      <h2 class="section-title">My Works</h2>
+      <h2 class="section-title" data-en="My Works" data-vi="Sự Hợp Tác">My Works</h2>
     </div>
   </div>
 
@@ -1805,8 +1917,8 @@
     </div>
   </div>
   <div style="text-align:center; margin-top: 1.5rem;">
-    <p style="font-family:'Space Mono',monospace; font-size:0.85rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--mist); margin-bottom: 2rem;">Featured brand collaborations on TikTok</p>
-    <a href="#contact" class="section-cta">View All Works</a>
+    <p style="font-family:'Space Mono',monospace; font-size:0.85rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--mist); margin-bottom: 2rem;"><span data-lang="en">Featured brand collaborations on TikTok</span><span data-lang="vi" style="display:none;">Các thương hiệu đã hợp tác trên TikTok</span></p>
+    <a href="#contact" class="section-cta" data-en="View All Works" data-vi="Xem Tất Cả">View All Works</a>
   </div>
 </section>
 
@@ -1819,15 +1931,15 @@
   <div class="stats-grid">
     <div class="stat-item">
       <div class="stat-num"><span id="n1">0</span>+</div>
-      <div class="stat-label">Years of Experience</div>
+      <div class="stat-label" data-en="Years of Experience" data-vi="Năm Kinh Nghiệm">Years of Experience</div>
     </div>
     <div class="stat-item" style="transition-delay:0.15s;">
       <div class="stat-num"><span id="n2">0</span>+</div>
-      <div class="stat-label">Brand Collaborations</div>
+      <div class="stat-label" data-en="Brand Collaborations" data-vi="Thương Hiệu Hợp Tác">Brand Collaborations</div>
     </div>
     <div class="stat-item" style="transition-delay:0.3s;">
       <div class="stat-num"><span id="n3">0</span>+</div>
-      <div class="stat-label">Projects Completed</div>
+      <div class="stat-label" data-en="Projects Completed" data-vi="Dự Án Hoàn Thành">Projects Completed</div>
     </div>
   </div>
 </section>
@@ -1839,7 +1951,7 @@
 <section id="process">
     <div class="section-header">
       <div>
-        <h2 class="section-title">My Projects</h2>
+        <h2 class="section-title" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</h2>
       </div>
     </div>
 
@@ -1892,9 +2004,9 @@
   <div class="contact-layout">
     <!-- Left -->
     <div class="contact-left">
-      <p class="section-num">Contact</p>
-      <h2 class="contact-title">Let's create<br><em>something together</em></h2>
-      <p class="contact-sub">Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours.</p>
+      <p class="section-num" data-en="Contact" data-vi="Liên Hệ">Contact</p>
+      <h2 class="contact-title" data-en="Let's create" data-en-em="something together" data-vi="Hãy cùng nhau" data-vi-em="tạo ra điều gì đó">Let's create<br><em>something together</em></h2>
+      <p class="contact-sub" data-en="Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours." data-vi="Dù là một dự án nhỏ hay một ý tưởng lớn, mình luôn sẵn sàng lắng nghe. Hãy để lại tin nhắn và mình sẽ phản hồi trong vòng 24 giờ.">Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours.</p>
       <a href="mailto:GioOTrongMat@gmail.com" class="contact-email">GioOTrongMat@gmail.com</a>
     </div>
 
@@ -1903,20 +2015,20 @@
       <form id="contactForm" action="https://formspree.io/f/xnjlwpnz" method="POST">
         <div class="contact-row">
           <div class="contact-field">
-            <input type="text" name="firstName" placeholder="First Name" required>
+            <input type="text" name="firstName" placeholder="First Name" data-en-placeholder="First Name" data-vi-placeholder="Họ" required>
           </div>
           <div class="contact-field">
-            <input type="text" name="lastName" placeholder="Last Name" required>
+            <input type="text" name="lastName" placeholder="Last Name" data-en-placeholder="Last Name" data-vi-placeholder="Tên" required>
           </div>
         </div>
         <div class="contact-field">
-          <input type="email" name="email" placeholder="Email" required>
+          <input type="email" name="email" placeholder="Email" data-en-placeholder="Email" data-vi-placeholder="Email" required>
         </div>
         <div class="contact-field">
-          <textarea name="message" placeholder="Tell me about your project..." rows="5" required></textarea>
+          <textarea name="message" placeholder="Tell me about your project..." data-en-placeholder="Tell me about your project..." data-vi-placeholder="Kể mình nghe về dự án của bạn..." rows="5" required></textarea>
         </div>
         <button type="submit" class="contact-submit" id="submitBtn">
-          <span id="submitText">Send Message</span>
+          <span id="submitText" data-en="Send Message" data-vi="Gửi Tin Nhắn">Send Message</span>
         </button>
         <p id="formMsg" style="display:none;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold);margin-top:1rem;"></p>
       </form>
@@ -2320,6 +2432,54 @@
     svg.parentElement.parentElement.addEventListener('mouseenter', () => { svg.style.opacity = '0.35'; });
     svg.parentElement.parentElement.addEventListener('mouseleave', () => { svg.style.opacity = '0.15'; });
   });
+
+  // ── LANGUAGE TOGGLE ──
+  let currentLang = 'en';
+
+  function toggleLang() {
+    const flag = document.getElementById('langFlag');
+    currentLang = currentLang === 'en' ? 'vi' : 'en';
+    const sw = document.getElementById('langSwitch');
+    const thumb = document.getElementById('langThumb');
+    sw.classList.toggle('is-en', currentLang === 'en');
+    sw.classList.toggle('is-vi', currentLang === 'vi');
+    thumb.textContent = currentLang === 'en' ? '🇬🇧' : '🇻🇳';
+    applyLang();
+  }
+
+  // Init switch state
+  (function() {
+    const sw = document.getElementById('langSwitch');
+    if (sw) { sw.classList.add('is-en'); }
+  })();
+
+  function applyLang() {
+    const lang = currentLang;
+    const flag = document.getElementById('langFlag');
+    if (flag) flag.src = lang === 'en' ? 'https://flagcdn.com/w40/gb.png' : 'https://flagcdn.com/w40/vn.png';
+
+    // Simple text nodes with data-en / data-vi
+    document.querySelectorAll('[data-en]').forEach(el => {
+      // Special case: contact-title has nested <em>
+      if (el.classList.contains('contact-title')) {
+        const mainText = el.getAttribute('data-' + lang);
+        const emText   = el.getAttribute('data-' + lang + '-em');
+        el.innerHTML = mainText + '<br><em>' + emText + '</em>';
+      } else {
+        el.textContent = el.getAttribute('data-' + lang);
+      }
+    });
+
+    // Bio spans
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+
+    // Input/textarea placeholders
+    document.querySelectorAll('[data-en-placeholder]').forEach(el => {
+      el.placeholder = el.getAttribute('data-' + lang + '-placeholder');
+    });
+  }
 </script>
 </body>
 </html>
