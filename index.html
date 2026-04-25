@@ -80,8 +80,8 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 18px 3rem;
     background: linear-gradient(to bottom, rgba(10,8,5,0.92) 0%, rgba(10,8,5,0) 100%);
@@ -96,8 +96,8 @@
     text-transform: uppercase;
     text-decoration: none;
     opacity: 0;
-    position: absolute;
-    left: 50%;
+    grid-column: 2;
+    text-align: center;
     animation: fadeDownLogo 0.8s ease 0.2s forwards;
   }
 
@@ -107,7 +107,8 @@
     list-style: none;
     opacity: 0;
     animation: fadeDown 0.8s ease 0.4s forwards;
-    margin-left: auto;
+    grid-column: 3;
+    justify-content: flex-end;
   }
 
   .nav-links a {
@@ -204,7 +205,60 @@
     pointer-events: auto;
   }
 
-  /* Overlay — normal dark, lighter when unmuted */
+  /* Hamburger button — hidden on desktop */
+  .nav-hamburger {
+    display: none;
+    grid-column: 3;
+    justify-self: end;
+    background: none;
+    border: none;
+    color: var(--cream);
+    cursor: pointer;
+    padding: 4px;
+    z-index: 101;
+  }
+
+  /* Mobile dropdown menu */
+  .nav-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 99;
+    background: rgba(10,8,5,0.97);
+    backdrop-filter: blur(12px);
+    padding: 6rem 2rem 2.5rem;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-mobile-menu.open {
+    transform: translateY(0);
+  }
+  .nav-mobile-menu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .nav-mobile-menu a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    color: var(--cream);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-mobile-menu a:hover { color: var(--gold); }
+
+  /* Switch to hamburger at 900px */
+  @media (max-width: 900px) {
+    .nav-links { display: none !important; }
+    .nav-hamburger { display: block; }
+    .nav-mobile-menu { display: block; }
+  }
+
+
   .hero-overlay {
     transition: background 0.8s ease;
   }
@@ -454,13 +508,12 @@
   }
 
   /* All sections below hero sit above the fixed video */
-  .marquee-wrap, #instructor, #works, #stats, #process, footer {
+  .marquee-wrap, #instructor, #works, #process, footer {
     position: relative;
     z-index: 10;
     background: var(--ink);
   }
 
-  #stats { background: var(--paper); }
 
   /* ── MARQUEE ── */
   .marquee-wrap {
@@ -792,11 +845,39 @@
     animation: ringPulse 4s ease-in-out infinite;
   }
 
-  /* ── STATS SECTION ── */
+  .process-contact-cover {
+    position: relative;
+    z-index: 10;
+    background: var(--ink);
+  }
+
+  #process {
+    background: var(--ink);
+    position: relative;
+    z-index: 10;
+  }
+
   #stats {
+    position: relative;
+    z-index: 10;
     padding: 6rem 3rem;
     background: var(--paper);
     color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+
+    /* pop-up from background */
+    opacity: 0;
+    transform: scale(0.85) translateY(60px);
+    transition: opacity 0.6s ease,
+                transform 0.8s cubic-bezier(0.34, 1.45, 0.64, 1);
+  }
+
+  #stats.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 
   .stats-grid {
@@ -804,29 +885,30 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
     text-align: center;
   }
 
   .stat-item {
     border-top: 1px solid rgba(14,12,9,0.15);
-    padding-top: 1.5rem;
+    border-bottom: 1px solid rgba(14,12,9,0.15);
+    padding: 1.5rem 0;
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.5) translateY(50px);
+    transition: opacity 0.4s ease 0.5s,
+                transform 0.7s cubic-bezier(0.34, 1.58, 0.64, 1) 0.5s;
   }
 
-  .stat-item {
-    border-top: 1px solid rgba(14,12,9,0.15);
-    padding-top: 1.5rem;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  .stat-item[style*="0.15s"] {
+    transition-delay: 0.65s !important;
+  }
+  .stat-item[style*="0.3s"] {
+    transition-delay: 0.8s !important;
   }
 
   .stat-item.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
   }
 
   .stat-num {
@@ -835,6 +917,26 @@
     line-height: 1;
     letter-spacing: -0.03em;
     color: var(--ink);
+    display: inline-block;
+  }
+
+  .stat-item.visible .stat-num {
+    animation: statPop 0.65s cubic-bezier(0.34, 1.58, 0.64, 1) forwards;
+    animation-delay: 0.5s;
+  }
+  .stat-item[style*="0.15s"].visible .stat-num {
+    animation-delay: 0.65s;
+  }
+  .stat-item[style*="0.3s"].visible .stat-num {
+    animation-delay: 0.8s;
+  }
+
+  @keyframes statPop {
+    0%   { transform: scale(0.4); }
+    55%  { transform: scale(1.18); }
+    75%  { transform: scale(0.94); }
+    90%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
   }
 
   .stat-num span {
@@ -860,8 +962,7 @@
   /* Header sticks while video resizes below */
   #process .section-header {
     padding: 8rem 3rem 2rem;
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 20;
     background: var(--ink);
     margin-bottom: 0;
@@ -877,6 +978,7 @@
     transform: scale(1.5);
     opacity: 0.4;
     transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
+    min-height: calc(68vw * 9/16 + 6rem);
   }
 
   .slider-outer.slider-visible {
@@ -915,6 +1017,10 @@
   .slider-wrap {
     overflow: hidden;
     width: 100%;
+    min-height: calc(68vw * 9 / 16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .slider-track {
@@ -1116,7 +1222,7 @@
     padding: 8rem 3rem;
     border-top: 1px solid rgba(201,168,76,0.15);
     position: relative;
-    z-index: 10;
+    z-index: 5;
     background: var(--ink);
   }
 
@@ -1284,8 +1390,8 @@
   }
 
   @keyframes fadeDownLogo {
-    from { opacity: 0; transform: translateX(-50%) translateY(-15px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes slideUp {
@@ -1322,20 +1428,21 @@
 
   /* ── INSTRUCTOR SECTION ── */
   #instructor {
-    padding: 8rem 3rem;
+    padding: 8rem 3rem 3rem;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     overflow: hidden;
   }
 
   .instructor-layout {
     display: grid;
-    grid-template-columns: minmax(280px, 400px) 1fr;
+    grid-template-columns: minmax(280px, 400px) minmax(300px, 520px);
     gap: 4rem;
     align-items: start;
     margin-bottom: 4rem;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    justify-content: center;
   }
 
   /* Image wrap */
@@ -1364,6 +1471,8 @@
     display: block;
     object-fit: contain;
     margin-left: auto;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   }
 
   .instructor-img-placeholder::before {
@@ -1421,7 +1530,7 @@
   }
 
   .instructor-bio {
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
     color: var(--mist);
     line-height: 1.8;
     font-weight: 300;
@@ -1463,7 +1572,12 @@
     transition-delay: 0.3s;
   }
 
-  .instructor-quote-wrap.reveal { opacity: 1; transform: translateY(0); }
+  .instructor-quote-wrap.reveal,
+  .instructor-quote-wrap.reveal-up {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s;
+  }
 
   .instructor-quote {
     font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -1479,10 +1593,10 @@
 
   /* Responsive */
   @media (max-width: 768px) {
-    nav { padding: 1.5rem; }
-    .nav-links { display: none; }
-    .works-grid { grid-template-columns: 1fr; }
-    .work-card:first-child { grid-row: span 1; aspect-ratio: 4/3; }
+    nav { padding: 1.5rem; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+    .works-grid { grid-template-columns: 1fr; align-items: center; justify-items: center; }
+    .work-card { max-width: 280px; width: 100%; }
+    .work-card:first-child { grid-row: span 1; aspect-ratio: 9/16; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .process-item { grid-template-columns: 60px 1fr; }
     .process-desc { display: none; }
@@ -1511,7 +1625,23 @@
     <li><a href="#process">My Projects</a></li>
     <li><a href="#instructor">About Me</a></li>
   </ul>
+  <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()" aria-label="Menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+      <rect y="0" width="22" height="2" rx="1" fill="currentColor"/>
+      <rect y="7" width="22" height="2" rx="1" fill="currentColor"/>
+      <rect y="14" width="22" height="2" rx="1" fill="currentColor"/>
+    </svg>
+  </button>
 </nav>
+
+<!-- Mobile menu dropdown -->
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <ul>
+    <li><a href="#works" onclick="toggleMenu()">My Works</a></li>
+    <li><a href="#process" onclick="toggleMenu()">My Projects</a></li>
+    <li><a href="#instructor" onclick="toggleMenu()">About Me</a></li>
+  </ul>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1660,8 +1790,8 @@
 
     <!-- CARD 3 — từ PHẢI -->
     <div class="work-card" style="background:#0D1515;">
-      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g&sz=w600" alt="Rockstar">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/jXBKyWVtMnE?mute=1embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&loop=1embed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&playlist=jXBKyWVtMnEembed/jXBKyWVtMnE?autoplay=1&mute=1&loop=1&playlist=jXBKyWVtMnE&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1-R8OWLjwc0csrBZ71eoYsDwD6v2eVLWC&sz=w600" alt="Warrior">
+      <iframe class="work-card-video" src="https://www.youtube.com/embed/i2XtrUIC3kA?autoplay=1&mute=1&loop=1&playlist=i2XtrUIC3kA&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       <div class="yt-blocker"></div>
       <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
       <div class="card-shape">
@@ -1674,12 +1804,17 @@
       </div>
     </div>
   </div>
-  <div style="text-align:center; margin-top: 3rem;">
+  <div style="text-align:center; margin-top: 1.5rem;">
+    <p style="font-family:'Space Mono',monospace; font-size:0.85rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--mist); margin-bottom: 2rem;">Featured brand collaborations on TikTok</p>
     <a href="#contact" class="section-cta">View All Works</a>
   </div>
 </section>
 
-<!-- STATS / TAGS -->
+
+<!-- Spacer holds layout when process-contact-cover is fixed -->
+<div id="cover-spacer" style="display:none;"></div>
+
+<!-- STATS -->
 <section id="stats">
   <div class="stats-grid">
     <div class="stat-item">
@@ -1697,55 +1832,60 @@
   </div>
 </section>
 
-<!-- PROCESS VIDEO SLIDER -->
+<!-- PROCESS + CONTACT BLOCK -->
+<div class="process-contact-cover">
+
+<!-- PROCESS -->
 <section id="process">
-  <div class="section-header">
-    <div>
-      <h2 class="section-title">My Projects</h2>
-    </div>
-  </div>
-
-  <div class="slider-outer">
-    <button class="slider-btn" id="btnPrev">&#8592;</button>
-
-    <div class="slider-wrap">
-      <div class="slider-track" id="sliderTrack">
-
-        <!-- SLIDE 1 — 16:9 -->
-        <div class="slide active" data-index="0">
-          <iframe src="https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/preview"
-            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
-            allow="autoplay" allowfullscreen></iframe>
-        </div>
-
-        <!-- SLIDE 2 — portrait 9:16 -->
-        <div class="slide" data-index="1" data-ratio="9:16">
-          <iframe src="https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/preview"
-            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
-            allow="autoplay" allowfullscreen></iframe>
-        </div>
-
-        <!-- SLIDE 3 — 16:9 -->
-        <div class="slide" data-index="2">
-          <iframe src="https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/preview"
-            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
-            allow="autoplay" allowfullscreen></iframe>
-        </div>
-
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">My Projects</h2>
       </div>
     </div>
 
-    <button class="slider-btn" id="btnNext">&#8594;</button>
-  </div>
+    <div class="slider-outer">
+      <button class="slider-btn" id="btnPrev">&#8592;</button>
 
-  <div class="slider-nav">
-    <div class="slider-dots" id="sliderDots">
-      <div class="slider-dot active" data-dot="0"></div>
-      <div class="slider-dot" data-dot="1"></div>
-      <div class="slider-dot" data-dot="2"></div>
+      <div class="slider-wrap">
+        <div class="slider-track" id="sliderTrack">
+
+          <!-- SLIDE 1 — 16:9 -->
+          <div class="slide active" data-index="0">
+            <iframe src="https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/preview"
+              style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+              allow="autoplay" allowfullscreen></iframe>
+          </div>
+
+          <!-- SLIDE 2 — portrait 9:16 -->
+          <div class="slide" data-index="1" data-ratio="9:16">
+            <iframe src="https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/preview"
+              style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+              allow="autoplay" allowfullscreen></iframe>
+          </div>
+
+          <!-- SLIDE 3 — 16:9 -->
+          <div class="slide" data-index="2">
+            <iframe src="https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/preview"
+              style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+              allow="autoplay" allowfullscreen></iframe>
+          </div>
+
+        </div>
+      </div>
+
+      <button class="slider-btn" id="btnNext">&#8594;</button>
     </div>
-  </div>
-</section>
+
+    <div class="slider-nav">
+      <div class="slider-dots" id="sliderDots">
+        <div class="slider-dot active" data-dot="0"></div>
+        <div class="slider-dot" data-dot="1"></div>
+        <div class="slider-dot" data-dot="2"></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /.process-contact-cover -->
 
 <!-- CONTACT -->
 <section id="contact">
@@ -1755,7 +1895,7 @@
       <p class="section-num">Contact</p>
       <h2 class="contact-title">Let's create<br><em>something together</em></h2>
       <p class="contact-sub">Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours.</p>
-      <a href="mailto:giootrongmat@gmail.com" class="contact-email">giootrongmat@gmail.com</a>
+      <a href="mailto:GioOTrongMat@gmail.com" class="contact-email">GioOTrongMat@gmail.com</a>
     </div>
 
     <!-- Right: form -->
@@ -1864,23 +2004,39 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.work-card').forEach(el => cardObs.observe(el));
 
-  // Instructor section — reveal on scroll down, hide only when section exits upward
+  // Instructor section — reveal on scroll down AND scroll back up
   const insImg   = document.getElementById('ins-img');
   const insText  = document.getElementById('ins-text');
   const insQuote = document.getElementById('ins-quote');
-  const insEls   = [insImg, insText, insQuote];
 
   const insObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        insEls.forEach(el => el.classList.add('reveal'));
-      } else if (e.boundingClientRect.top > 0) {
-        insEls.forEach(el => el.classList.remove('reveal'));
+        [insImg, insText].forEach(el => el.classList.add('reveal'));
+      } else {
+        [insImg, insText].forEach(el => {
+          el.classList.remove('reveal');
+          el.classList.remove('reveal-up');
+        });
       }
     });
   }, { threshold: 0.15 });
 
   insObs.observe(document.getElementById('instructor'));
+
+  // Quote — separate observer, triggers when quote itself enters viewport
+  const quoteObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        insQuote.classList.add('reveal');
+      } else {
+        insQuote.classList.remove('reveal');
+        insQuote.classList.remove('reveal-up');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  quoteObs.observe(insQuote);
 
   // Scroll reveal — stats only now
   const observer = new IntersectionObserver(entries => {
@@ -1938,31 +2094,74 @@
   track.addEventListener('mouseup',  e => { if (dragStart !== null && Math.abs(e.clientX - dragStart) > 40) goTo(e.clientX < dragStart ? current + 1 : current - 1); dragStart = null; });
   track.addEventListener('touchend', e => { if (dragStart !== null && Math.abs(e.changedTouches[0].clientX - dragStart) > 40) goTo(e.changedTouches[0].clientX < dragStart ? current + 1 : current - 1); dragStart = null; });
 
-  // Count-up animation for stats
+  // Count-up runs only on first appearance; subsequent entries just fade in with final values
   const targets = { n1: 7, n2: 50, n3: 1000 };
   const statsSection = document.getElementById('stats');
-  let counted = false;
+  const statItems = statsSection.querySelectorAll('.stat-item');
+  let hasCountedOnce = false;
 
-  const statsObs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && !counted) {
-      counted = true;
+  function resetStats() {
+    statsSection.classList.remove('visible');
+    statItems.forEach(item => item.classList.remove('visible'));
+    if (!hasCountedOnce) {
+      Object.keys(targets).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '0'; });
+    }
+  }
+
+  function playStats() {
+    statsSection.offsetHeight;
+    statsSection.classList.add('visible');
+    statItems.forEach(item => { item.offsetHeight; item.classList.add('visible'); });
+
+    if (!hasCountedOnce) {
+      hasCountedOnce = true;
       Object.entries(targets).forEach(([id, end]) => {
         const el = document.getElementById(id);
+        if (!el) return;
         let start = 0;
         const step = end / 60;
-        const interval = setInterval(() => {
+        const iv = setInterval(() => {
           start += step;
-          if (start >= end) {
-            start = end;
-            clearInterval(interval);
-          }
+          if (start >= end) { start = end; clearInterval(iv); }
           el.textContent = Math.floor(start);
         }, 16);
       });
     }
-  }, { threshold: 0.5 });
+  }
 
-  statsObs.observe(statsSection);
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => { lastScrollY = window.scrollY; }, { passive: true });
+
+  // Trigger pop-up when section center reaches viewport center (scrolling down only)
+  let statsTriggered = false;
+
+  function checkStatsPosition() {
+    const rect = statsSection.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const sectionCenter = rect.top + rect.height / 2;
+    const viewportCenter = vh * 0.7;
+
+    if (!statsTriggered && sectionCenter <= viewportCenter && rect.top >= 0) {
+      // section center reached viewport center while coming from below → pop up
+      statsTriggered = true;
+      playStats();
+    } else if (statsTriggered && rect.top > vh) {
+      // section has gone back below viewport → reset
+      statsTriggered = false;
+      resetStats();
+    } else if (!statsTriggered && rect.bottom < 0) {
+      // section is above viewport (scrolled past) → show silently
+      statsSection.classList.add('visible');
+      statItems.forEach(item => item.classList.add('visible'));
+      Object.entries(targets).forEach(([id, end]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = end;
+      });
+    }
+  }
+
+  window.addEventListener('scroll', checkStatsPosition, { passive: true });
+  checkStatsPosition();
 
   // Contact form — Formspree AJAX
   const form = document.getElementById('contactForm');
@@ -2048,6 +2247,8 @@
     sliderScrollObs.observe(sliderOuter);
   }
 
+  // Pin effect removed — layout flows naturally
+
   // Work card hover: play/pause YouTube iframe, pause on leave if unmuted
   document.querySelectorAll('.work-card').forEach(card => {
     const vid = card.querySelector('.work-card-video');
@@ -2084,6 +2285,17 @@
     });
   }, { threshold: 0 });
   if (heroEl) heroObs.observe(heroEl);
+
+  function toggleMenu() {
+    const menu = document.getElementById('navMobileMenu');
+    const btn = document.getElementById('navHamburger');
+    menu.classList.toggle('open');
+    // Toggle icon between hamburger and X
+    const isOpen = menu.classList.contains('open');
+    btn.innerHTML = isOpen
+      ? `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      : `<svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect y="0" width="22" height="2" rx="1" fill="currentColor"/><rect y="7" width="22" height="2" rx="1" fill="currentColor"/><rect y="14" width="22" height="2" rx="1" fill="currentColor"/></svg>`;
+  }
 
   // Toggle mute on work card iframes via YouTube postMessage API
   function toggleCardMute(btn) {
