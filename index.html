@@ -2437,13 +2437,10 @@
   let currentLang = 'en';
 
   function toggleLang() {
-    const flag = document.getElementById('langFlag');
     currentLang = currentLang === 'en' ? 'vi' : 'en';
     const sw = document.getElementById('langSwitch');
-    const thumb = document.getElementById('langThumb');
     sw.classList.toggle('is-en', currentLang === 'en');
     sw.classList.toggle('is-vi', currentLang === 'vi');
-    thumb.textContent = currentLang === 'en' ? '🇬🇧' : '🇻🇳';
     applyLang();
   }
 
