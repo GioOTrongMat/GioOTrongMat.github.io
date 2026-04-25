@@ -2048,14 +2048,37 @@
     });
   };
 
+  // ── SINGLE AUDIO SOURCE SYSTEM ──
+  // Mute every audio source: hero YT + all work cards
+  function muteAllSources() {
+    // Mute hero
+    if (ytPlayer && typeof ytPlayer.mute === 'function') {
+      ytPlayer.mute();
+      isMuted = true;
+      const btn = document.getElementById('unmuteBtn');
+      const overlay = document.getElementById('heroOverlay');
+      if (btn) { btn.classList.add('is-muted'); btn.textContent = 'Unmute'; }
+      if (overlay) overlay.classList.remove('unmuted');
+    }
+    // Mute all work cards
+    document.querySelectorAll('.card-unmute-btn').forEach(b => {
+      const card = b.closest('.work-card');
+      const iframe = card && card.querySelector('iframe.work-card-video');
+      const video  = card && card.querySelector('video.work-card-video');
+      if (iframe) iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+      if (video)  { video.muted = true; video.volume = 0; }
+      b.textContent = 'Unmute';
+    });
+  }
+
   function toggleMute() {
     const btn = document.getElementById('unmuteBtn');
     const overlay = document.getElementById('heroOverlay');
     if (!ytPlayer) return;
     if (isMuted) {
+      muteAllSources();          // mute everything else first
       ytPlayer.unMute();
       ytPlayer.setVolume(80);
-      // After unmute: remove is-muted so button stays hidden permanently
       btn.classList.remove('is-muted');
       btn.textContent = 'Mute';
       overlay.classList.add('unmuted');
@@ -2203,6 +2226,7 @@
   let dragStart = null;
   track.addEventListener('mousedown',  e => { dragStart = e.clientX; });
   track.addEventListener('touchstart', e => { dragStart = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('click', () => { muteAllSources(); });
   track.addEventListener('mouseup',  e => { if (dragStart !== null && Math.abs(e.clientX - dragStart) > 40) goTo(e.clientX < dragStart ? current + 1 : current - 1); dragStart = null; });
   track.addEventListener('touchend', e => { if (dragStart !== null && Math.abs(e.changedTouches[0].clientX - dragStart) > 40) goTo(e.changedTouches[0].clientX < dragStart ? current + 1 : current - 1); dragStart = null; });
 
@@ -2414,17 +2438,17 @@
     const card = btn.closest('.work-card');
     const iframe = card.querySelector('iframe.work-card-video');
     const video = card.querySelector('video.work-card-video');
-    const isMuted = btn.textContent.trim() === 'Unmute';
-    if (iframe) {
-      iframe.contentWindow.postMessage(
-        JSON.stringify({ event: 'command', func: isMuted ? 'unMute' : 'mute', args: [] }),
-        '*'
-      );
-    } else if (video) {
-      video.muted = !isMuted;
-      video.volume = isMuted ? 0.8 : 0;
+    const wasМuted = btn.textContent.trim() === 'Unmute';
+    if (wasМuted) {
+      muteAllSources(); // mute hero + all other cards first
+      if (iframe) iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
+      if (video) { video.muted = false; video.volume = 0.8; }
+      btn.textContent = 'Mute';
+    } else {
+      if (iframe) iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+      if (video) { video.muted = true; video.volume = 0; }
+      btn.textContent = 'Unmute';
     }
-    btn.textContent = isMuted ? 'Mute' : 'Unmute';
   }
 
   // Hover on work cards — reveal SVG
