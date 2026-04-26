@@ -532,7 +532,7 @@
   }
 
   /* All sections below hero sit above the fixed video */
-  .marquee-wrap, #instructor, #works, #process, footer {
+  .marquee-wrap, #about-me, #works, #projects, footer {
     position: relative;
     z-index: 10;
     background: var(--ink);
@@ -876,7 +876,7 @@
     background: var(--ink);
   }
 
-  #process {
+  #projects {
     background: var(--ink);
     position: relative;
     z-index: 10;
@@ -979,13 +979,13 @@
   }
 
   /* ── PROCESS VIDEO SLIDER ── */
-  #process {
+  #projects {
     padding: 0 0 3rem 0;
     border-bottom: 1px solid rgba(201,168,76,0.15);
   }
 
   /* Header sticks while video resizes below */
-  #process .section-header {
+  #projects .section-header {
     padding: 8rem 3rem 2rem;
     position: relative;
     z-index: 20;
@@ -1461,7 +1461,7 @@
   }
 
   /* ── INSTRUCTOR SECTION ── */
-  #instructor {
+  #about-me {
     padding: 8rem 3rem 3rem;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     overflow: hidden;
@@ -1639,7 +1639,7 @@
     footer { flex-direction: column; gap: 2rem; text-align: center; }
     .footer-info { text-align: center; }
     .footer-social { justify-content: center; }
-    #works, #process, #instructor { padding: 5rem 1.5rem; }
+    #works, #projects, #about-me { padding: 5rem 1.5rem; }
     #stats { padding: 4rem 1.5rem; }
     .instructor-layout { grid-template-columns: 1fr; gap: 2rem; }
     .instructor-img-placeholder img { max-width: 80%; margin: 0 auto; }
@@ -1746,8 +1746,8 @@
   <div class="nav-right">
     <ul class="nav-links">
       <li><a href="#works" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a></li>
-      <li><a href="#process" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
-      <li><a href="#instructor" data-en="About Me" data-vi="Về Mình">About Me</a></li>
+      <li><a href="#projects" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
+      <li><a href="#about-me" data-en="About Me" data-vi="Về Mình">About Me</a></li>
     </ul>
   </div>
   <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -1763,8 +1763,8 @@
 <div class="nav-mobile-menu" id="navMobileMenu">
   <ul>
     <li><a href="#works" onclick="toggleMenu()" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a></li>
-    <li><a href="#process" onclick="toggleMenu()" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
-    <li><a href="#instructor" onclick="toggleMenu()" data-en="About Me" data-vi="Về Mình">About Me</a></li>
+    <li><a href="#projects" onclick="toggleMenu()" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
+    <li><a href="#about-me" onclick="toggleMenu()" data-en="About Me" data-vi="Về Mình">About Me</a></li>
   </ul>
 </div>
 
@@ -1795,7 +1795,7 @@
     <p class="hero-sub" >FPV Pilot · Filmmaker · Content Creator</p>
     <div class="hero-ctas">
       <a href="#works" class="hero-btn hero-btn-primary" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a>
-      <a href="#instructor" class="hero-btn hero-btn-secondary" data-en="About Me" data-vi="Về Mình">About Me</a>
+      <a href="#about-me" class="hero-btn hero-btn-secondary" data-en="About Me" data-vi="Về Mình">About Me</a>
     </div>
   </div>
 
@@ -1837,7 +1837,7 @@
 </div>
 
 <!-- INSTRUCTOR -->
-<section id="instructor">
+<section id="about-me">
   <div class="instructor-layout">
     <!-- Image — from left -->
     <div class="instructor-img-wrap" id="ins-img">
@@ -1969,7 +1969,7 @@
 <div class="process-contact-cover">
 
 <!-- PROCESS -->
-<section id="process">
+<section id="projects">
     <div class="section-header">
       <div>
         <h2 class="section-title" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</h2>
@@ -2203,7 +2203,7 @@
     });
   }, { threshold: 0.15 });
 
-  insObs.observe(document.getElementById('instructor'));
+  insObs.observe(document.getElementById('about-me'));
 
   // Quote — separate observer, triggers when quote itself enters viewport
   const quoteObs = new IntersectionObserver(entries => {
