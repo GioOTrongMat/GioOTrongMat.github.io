@@ -1073,6 +1073,12 @@
     pointer-events: none;
   }
 
+  /* Slide cover — thumbnail overlay before play */
+  .slide-cover {
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
   /* Active slide: full size, centered */
   .slide.active {
     width: 68vw;
@@ -1981,20 +1987,45 @@
             <iframe src="https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/preview"
               style="position:absolute;inset:0;width:100%;height:100%;border:none;"
               allow="autoplay" allowfullscreen></iframe>
+            <div class="slide-cover" onclick="this.style.display='none';muteAllSources();"
+              style="position:absolute;inset:0;cursor:pointer;background:url('https://drive.google.com/thumbnail?id=1PhxkkKPHWChhcnD5cFoz6Zz7C12ruzhd&sz=w1280') center/cover no-repeat;">
+              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                  <circle cx="32" cy="32" r="31" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+                  <polygon points="26,20 48,32 26,44" fill="white"/>
+                </svg>
+              </div>
+            </div>
           </div>
-
           <!-- SLIDE 2 — 16:9 -->
           <div class="slide" data-index="1">
             <iframe src="https://drive.google.com/file/d/1Nl2tAMc27K56Ts1MDXedjz7Mg95wgnlH/preview"
               style="position:absolute;inset:0;width:100%;height:100%;border:none;"
               allow="autoplay" allowfullscreen></iframe>
+            <div class="slide-cover" onclick="this.style.display='none';muteAllSources();"
+              style="position:absolute;inset:0;cursor:pointer;background:url('https://drive.google.com/thumbnail?id=191DpZ2L46nsOHsFh_G_ivIlx3SoCf2Fy&sz=w1280') center/cover no-repeat;">
+              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                  <circle cx="32" cy="32" r="31" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+                  <polygon points="26,20 48,32 26,44" fill="white"/>
+                </svg>
+              </div>
+            </div>
           </div>
-
           <!-- SLIDE 3 — 16:9 -->
           <div class="slide" data-index="2">
             <iframe src="https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/preview"
               style="position:absolute;inset:0;width:100%;height:100%;border:none;"
               allow="autoplay" allowfullscreen></iframe>
+            <div class="slide-cover" onclick="this.style.display='none';muteAllSources();"
+              style="position:absolute;inset:0;cursor:pointer;background:url('https://drive.google.com/thumbnail?id=1Yl_mmtYlmY8bp5vfD4ITpDBKULpEgZ4j&sz=w1280') center/cover no-repeat;">
+              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                  <circle cx="32" cy="32" r="31" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+                  <polygon points="26,20 48,32 26,44" fill="white"/>
+                </svg>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -2229,6 +2260,9 @@
 
     slides[current].classList.add('active');
     dots[current].classList.add('active');
+    // Reset cover so it shows again on the new slide
+    const cover = slides[current].querySelector('.slide-cover');
+    if (cover) cover.style.display = '';
     const newVid = slides[current].querySelector('video');
     if (newVid) newVid.play();
   }
