@@ -264,6 +264,21 @@
     .nav-links { display: none !important; }
     .nav-hamburger { display: block; }
     .nav-mobile-menu { display: block; }
+    .lang-switch-track {
+      width: 2.6rem;
+      height: 1.4rem;
+    }
+    .lang-switch-thumb {
+      width: 1.1rem;
+      height: 1.1rem;
+      left: 0.13rem;
+    }
+    .lang-switch.is-vi .lang-switch-thumb {
+      left: calc(100% - 1.23rem);
+    }
+    .lang-switch-label {
+      font-size: 0.55rem;
+    }
   }
 
 
@@ -2382,6 +2397,18 @@
     }, { threshold: 0.2 });
     sliderScrollObs.observe(sliderOuter);
   }
+
+  // Detect click inside Drive iframe via window blur
+  // When user clicks inside an iframe, window loses focus
+  window.addEventListener('blur', () => {
+    const activeSlide = document.querySelector('.slide.active');
+    const focusedOnSlider = activeSlide && activeSlide.querySelector('iframe');
+    if (focusedOnSlider) {
+      muteAllSources();
+    }
+    // Restore focus to window so next blur fires correctly
+    setTimeout(() => window.focus(), 300);
+  });
 
   // Pin effect removed — layout flows naturally
 
