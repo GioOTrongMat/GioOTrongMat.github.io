@@ -3,11 +3,12 @@ import {session,login,logout,cookie} from './auth.mjs';
 import {GitHubStore,b64} from './github.mjs';
 const json=(value,status=200,headers={})=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 const types={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',pdf:'application/pdf'};
+const mediaResponse=file=>{const type=types[file.path.split('.').pop().toLowerCase()];assert(type,'Không phải file media.',403);return new Response(file.bytes,{headers:{'Content-Type':type,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'Content-Disposition':'inline'}});};
 export function createWorker(factory=env=>new GitHubStore(env)){
  return {async fetch(request,env){
   try{
    const u=new URL(request.url);const api=u.pathname.startsWith('/api/');
-   if(!api){
+   if(!api&&!u.pathname.startsWith('/uploads/')){
     const response=await env.ASSETS.fetch(request);const headers=new Headers(response.headers);headers.set('X-Content-Type-Options','nosniff');headers.set('Referrer-Policy','no-referrer');headers.set('X-Frame-Options','DENY');headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; connect-src 'self' https://giootrongmat.github.io; font-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");return new Response(response.body,{status:response.status,headers});
    }
    assert(u.protocol==='https:'||['localhost','127.0.0.1'].includes(u.hostname),'Cần HTTPS.',403);
@@ -18,12 +19,12 @@ export function createWorker(factory=env=>new GitHubStore(env)){
    }
    const s=await session(request,env);assert(s,'Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.',401);
    if(u.pathname==='/api/session'&&request.method==='GET')return json({username:s.username,csrf:s.csrf,expires:s.expires});
+   const store=factory(env);
+   if(u.pathname.startsWith('/uploads/')&&request.method==='GET')return mediaResponse(await store.read(readablePath(u.pathname)));
    if(request.method==='POST')assert(request.headers.get('x-csrf-token')===s.csrf,'Phiên xác thực không hợp lệ.',403);
    if(u.pathname==='/api/logout'&&request.method==='POST'){await logout(env,s);return json({ok:true},200,{'Set-Cookie':cookie(request,'',0)});}
-   const store=factory(env);
    if(u.pathname==='/api/media'&&request.method==='GET'){
-    const file=await store.read(readablePath(u.searchParams.get('path')));const type=types[file.path.split('.').pop().toLowerCase()];assert(type,'Không phải file media.',403);
-    return new Response(file.bytes,{headers:{'Content-Type':type,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'Content-Disposition':'inline'}});
+    return mediaResponse(await store.read(readablePath(u.searchParams.get('path'))));
    }
    assert(u.pathname==='/api/v1'&&request.method==='POST','Không tìm thấy API.',404);
    const payload=await readJSON(request,15*1024*1024);const p=payload.params||{};

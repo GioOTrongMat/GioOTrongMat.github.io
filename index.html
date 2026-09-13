@@ -1973,46 +1973,23 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
     sliderScrollObs.observe(sliderOuter);
   }
 
-  // Work card hover: auto play WITH sound on enter, mute+pause on leave
+  // Work card hover: muted preview; reset completely on leave
   document.querySelectorAll('.work-card').forEach(card => {
     const vid = card.querySelector('.work-card-video');
-    const btn = card.querySelector('.card-unmute-btn');
     if (!vid) return;
 
     card.addEventListener('mouseenter', () => {
       vid.currentTime = 0;
-      vid.muted = false;
-      vid.volume = 0.8;
-      vid.play().catch(() => {
-        // If browser blocks unmuted autoplay, fallback to muted
-        vid.muted = true;
-        vid.play();
-      });
+      vid.muted = true;
+      vid.play().catch(() => {});
     });
 
     card.addEventListener('mouseleave', () => {
       vid.pause();
       vid.currentTime = 0;
       vid.muted = true;
-      if (btn) { btn.textContent = 'Unmute'; btn.dataset.muted = 'true'; }
+      card.classList.remove('video-playing');
     });
-
-    if (btn) {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (btn.dataset.muted === 'true') {
-          vid.muted = false;
-          vid.volume = 0.8;
-          btn.textContent = 'Mute';
-          btn.dataset.muted = 'false';
-        } else {
-          vid.muted = true;
-          btn.textContent = 'Unmute';
-          btn.dataset.muted = 'true';
-        }
-      });
-    }
   });
 
   // Hide fixed video bg when scrolled past hero

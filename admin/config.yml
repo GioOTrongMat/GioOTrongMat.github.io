@@ -143,14 +143,15 @@
                     },
                     {
                       "name": "image",
-                      "label": "Ảnh bìa",
+                      "label": "Thumbnail / ảnh bìa",
                       "widget": "image"
                     },
                     {
                       "name": "video",
-                      "label": "Video MP4 (file hoặc URL)",
+                      "label": "Video hover MP4",
                       "widget": "file",
-                      "required": false
+                      "required": false,
+                      "hint": "Video hover MP4 — upload file MP4 hoặc nhập URL trực tiếp tới file .mp4. Không dùng link YouTube/Google Drive."
                     },
                     {
                       "name": "link",

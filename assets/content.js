@@ -20,6 +20,64 @@ window.siteReady = (async () => {
     } catch {}
     return '';
   };
+  const mp4 = value => {
+    if (!value) return '';
+    try {
+      const u = new URL(value, location.href);
+      const localUpload = value.startsWith('/uploads/') && u.origin === location.origin;
+      const remoteFile = u.protocol === 'https:';
+      return (localUpload || remoteFile) && /\.mp4$/i.test(u.pathname) ? u.href : '';
+    } catch { return ''; }
+  };
+  const workCard = work => {
+    const href = url(work.link);
+    const card = document.createElement('a');
+    card.className = 'work-card';
+    card.href = href || '#works';
+    card.setAttribute('aria-label', work.name);
+    if (href) { card.target = '_blank'; card.rel = 'noopener noreferrer'; }
+    else card.setAttribute('aria-disabled', 'true');
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'work-card-placeholder';
+    placeholder.textContent = work.name;
+    card.append(placeholder);
+
+    const thumbnail = url(work.image);
+    if (thumbnail) {
+      const image = document.createElement('img');
+      image.className = 'work-card-cover';
+      image.src = thumbnail;
+      image.alt = work.name;
+      image.loading = 'lazy';
+      card.append(image);
+    } else card.classList.add('missing-thumbnail');
+
+    const videoSource = mp4(work.video);
+    if (videoSource) {
+      const video = document.createElement('video');
+      video.className = 'work-card-video';
+      video.src = videoSource;
+      video.preload = 'metadata';
+      video.loop = true;
+      video.muted = true;
+      video.playsInline = true;
+      card.classList.add('has-video');
+      card.append(video);
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'work-card-overlay';
+    const info = document.createElement('div');
+    info.className = 'work-card-info';
+    const name = document.createElement('p');
+    name.className = 'work-name';
+    name.textContent = work.name;
+    info.append(name);
+    card.append(overlay, info);
+    if (href) { const icon = document.createElement('span'); icon.className = 'work-card-link-icon'; card.append(icon); }
+    return card;
+  };
   const response = await fetch('content/site.json', {cache:'no-cache',signal:AbortSignal.timeout(8000)});
   if (!response.ok) throw new Error(`Content: ${response.status}`);
   const d = await response.json();
@@ -40,15 +98,7 @@ window.siteReady = (async () => {
   text('nav a[href="#works"]',d.works.heading);text('.hero-btn-primary',d.works.heading);
   text('nav a[href="#instructor"]',d.about.heading);text('.hero-btn-secondary',d.about.heading);
   text('nav a[href="#process"]',d.projects.heading);
-  const templates=[...document.querySelectorAll('.work-card')];
-  $('.works-grid').replaceChildren(...d.works.items.map((work,i)=>{
-    const card=templates[i%templates.length].cloneNode(true);
-    card.href=url(work.link,'#contact');card.rel='noopener noreferrer';card.setAttribute('aria-label',work.name);
-    card.querySelector('img').src=url(work.image);card.querySelector('img').alt=work.name;
-    const video=card.querySelector('video');
-    if(work.video){video.src=url(work.video);video.preload='none';}else{video.remove();card.querySelector('.card-unmute-btn').remove();}
-    return card;
-  }));
+  $('.works-grid').replaceChildren(...d.works.items.map(workCard));
   text('#process .section-title',d.projects.heading);
   $('#sliderTrack').replaceChildren(...d.projects.items.map((project,i)=>{
     const slide=document.createElement('div');slide.className='slide'+(i===0?' active':'');slide.dataset.index=i;slide.dataset.ratio=project.ratio;
