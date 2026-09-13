@@ -1,0 +1,43 @@
+name: Build work previews
+on:
+  push:
+    branches: [main]
+    paths: [content/site.json]
+  workflow_dispatch:
+concurrency:
+  group: work-previews
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  previews:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: pip install --disable-pip-version-check gdown
+      - name: Build portrait previews
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .previews
+          node -e 'const d=require("./content/site.json"); for(const w of d.works.items||[]) if(w.id&&w.fullVideo) console.log([w.id,w.fullVideo].join("\t"))' |
+          while IFS=$'\t' read -r id url; do
+            [[ "$id" =~ ^[a-z0-9][a-z0-9-]{2,80}$ ]] || { echo "Invalid work id: $id"; exit 1; }
+            [[ "$url" =~ ^https://drive\.google\.com/(file/d/[^/]+/|open\?id=|uc\?id=) ]] || { echo "Invalid Drive file URL for $id"; exit 1; }
+            gdown --fuzzy "$url" -O ".previews/$id-source"
+            if ffprobe -v error -select_streams a:0 -show_entries stream=index -of csv=p=0 ".previews/$id-source" | grep -q .; then
+              ffmpeg -y -i ".previews/$id-source" -t 13 -filter_complex "[0:v]scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,setsar=1,fade=t=out:st=10:d=3[v];[0:a]afade=t=out:st=10:d=3[a]" -map "[v]" -map "[a]" -c:v libx264 -preset medium -crf 22 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart ".previews/$id.mp4"
+            else
+              ffmpeg -y -i ".previews/$id-source" -t 13 -vf "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,setsar=1,fade=t=out:st=10:d=3" -an -c:v libx264 -preset medium -crf 22 -pix_fmt yuv420p -movflags +faststart ".previews/$id.mp4"
+            fi
+            rm -f ".previews/$id-source"
+          done
+      - name: Upload previews to private R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+        run: aws s3 sync .previews/ s3://gio-portfolio-work-previews/works/ --exclude "*-source" --content-type video/mp4 --cache-control "public,max-age=3600" --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com"
