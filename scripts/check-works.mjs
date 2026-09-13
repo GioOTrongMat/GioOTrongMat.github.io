@@ -9,4 +9,8 @@ for(const w of d.works.items||[]){
 const js=fs.readFileSync(new URL('../assets/content.js',import.meta.url),'utf8'),css=fs.readFileSync(new URL('../assets/content.css',import.meta.url),'utf8');
 for(const token of ['--visible:7','aspect-ratio:9/16','scale(var(--dock-s,1))'])if(!css.includes(token))throw Error('Missing CSS contract: '+token);
 for(const token of ["currentTime=0","currentTime>=10","currentTime>=12.95","preload='none'"])if(!js.includes(token))throw Error('Missing preview contract: '+token);
-console.log(`Works OK: ${ids.size} item(s), portrait slider and preview timeline present.`);
+const visible=width=>width>=1440?7:width>=1024?5:width>=768?4:width>=480?2:1;
+for(const count of [1,2,4,7,8,10])for(const width of [1920,1440,1024,768,390]){const shown=Math.min(count,visible(width)),max=Math.max(0,count-shown);if((max>0)!==(count>shown))throw Error(`Slider matrix failed: ${count}/${width}`);}
+const admin=fs.readFileSync(new URL('../admin/bootstrap.js',import.meta.url),'utf8');
+for(const token of ['canvas.width=1080','canvas.height=1920',"canvas.toBlob(resolve,'image/webp'",'processWorkAssets'])if(!admin.includes(token))throw Error('Missing thumbnail contract: '+token);
+console.log(`Works OK: ${ids.size} item(s), 30 count/viewport cases, portrait thumbnail and preview timeline present.`);
