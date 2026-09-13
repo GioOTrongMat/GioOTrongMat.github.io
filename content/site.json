@@ -19,21 +19,21 @@
         "id": "sprite",
         "name": "Sprite",
         "image": "/Sprite.png",
-        "fullVideo": "https://drive.google.com/file/d/1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X/view",
+        "fullVideo": "https://drive.google.com/file/d/1Yk5afw7B0xIWbwWMVVksiYArZ0Niu_OQ/view",
         "legacyPreview": "/Video1.mp4"
       },
       {
         "id": "milo",
         "name": "Milo",
         "image": "/Milo.png",
-        "fullVideo": "https://drive.google.com/file/d/1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG/view?usp=sharing",
+        "fullVideo": "https://drive.google.com/file/d/18zPZyI1hvWstc7LSCNMHlghcBR4yBb9d/view",
         "legacyPreview": "/Video2.mp4"
       },
       {
         "id": "rockstar",
         "name": "Rockstar",
         "image": "/Rockstar.png",
-        "fullVideo": "https://drive.google.com/file/d/1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g/view?usp=sharing",
+        "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
         "legacyPreview": "/Video3.mp4"
       }
     ]
