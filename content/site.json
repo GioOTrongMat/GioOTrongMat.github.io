@@ -12,28 +12,28 @@
         "id": "rita-vo",
         "name": "Rita Võ",
         "image": "https://drive.google.com/file/d/1jqBvADHJ-Iwgk8Lydcru80q_RLBzr3Ns/view?usp=sharing",
-        "fullVideo": "",
+        "fullVideo": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view",
         "legacyPreview": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view?usp=sharing"
       },
       {
         "id": "sprite",
         "name": "Sprite",
         "image": "/Sprite.png",
-        "fullVideo": "",
+        "fullVideo": "https://drive.google.com/file/d/1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X/view",
         "legacyPreview": "/Video1.mp4"
       },
       {
         "id": "milo",
         "name": "Milo",
         "image": "/Milo.png",
-        "fullVideo": "",
+        "fullVideo": "https://drive.google.com/file/d/1JbWg5tWYOLOKS439DDdH7gZd39lw1hDG/view?usp=sharing",
         "legacyPreview": "/Video2.mp4"
       },
       {
         "id": "rockstar",
         "name": "Rockstar",
         "image": "/Rockstar.png",
-        "fullVideo": "",
+        "fullVideo": "https://drive.google.com/file/d/1XPBucVzP1S_CsMa5WVwyTO63E7QyTP2g/view?usp=sharing",
         "legacyPreview": "/Video3.mp4"
       }
     ]
