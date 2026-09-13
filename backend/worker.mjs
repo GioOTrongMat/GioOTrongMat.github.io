@@ -4,10 +4,17 @@ import {GitHubStore,b64} from './github.mjs';
 const json=(value,status=200,headers={})=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 const types={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',pdf:'application/pdf'};
 const mediaResponse=file=>{const type=types[file.path.split('.').pop().toLowerCase()];assert(type,'Không phải file media.',403);return new Response(file.bytes,{headers:{'Content-Type':type,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'Content-Disposition':'inline'}});};
+async function previewResponse(request,env,key){
+ assert(env.WORK_PREVIEWS,'Preview storage chưa được cấu hình.',503);assert(/^works\/[a-z0-9][a-z0-9-]{2,80}\.mp4$/.test(key),'Preview không hợp lệ.',404);
+ const range=request.headers.get('range');let object,status=200;
+ if(range){const m=/^bytes=(\d+)-(\d*)$/.exec(range);assert(m,'Range không hợp lệ.',416);const from=Number(m[1]),to=m[2]?Number(m[2]):undefined;object=await env.WORK_PREVIEWS.get(key,{range:{offset:from,length:to===undefined?undefined:to-from+1}});status=206;}else object=await env.WORK_PREVIEWS.get(key);
+ assert(object,'Preview chưa sẵn sàng.',404);const headers=new Headers();object.writeHttpMetadata(headers);headers.set('Content-Type','video/mp4');headers.set('Accept-Ranges','bytes');headers.set('Cache-Control','public, max-age=3600, stale-while-revalidate=86400');headers.set('ETag',object.httpEtag);if(status===206){const off=object.range?.offset||0;headers.set('Content-Range',`bytes ${off}-${off+object.size-1}/${object.range?.length||object.size}`);}return new Response(object.body,{status,headers});
+}
 export function createWorker(factory=env=>new GitHubStore(env)){
  return {async fetch(request,env){
   try{
    const u=new URL(request.url);const api=u.pathname.startsWith('/api/');
+   if(request.method==='GET'&&u.pathname.startsWith('/work-previews/'))return await previewResponse(request,env,'works/'+decodeURIComponent(u.pathname.slice('/work-previews/'.length)));
    if(!api&&!u.pathname.startsWith('/uploads/')){
     const response=await env.ASSETS.fetch(request);const headers=new Headers(response.headers);headers.set('X-Content-Type-Options','nosniff');headers.set('Referrer-Policy','no-referrer');headers.set('X-Frame-Options','DENY');headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: https:; connect-src 'self' https://giootrongmat.github.io; font-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");return new Response(response.body,{status:response.status,headers});
    }

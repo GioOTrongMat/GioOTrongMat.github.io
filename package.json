@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "node scripts/serve.cjs",
     "cms": "node scripts/cms.cjs",
-    "check": "node scripts/check.cjs",
+    "check": "node scripts/check.cjs && node scripts/check-works.mjs",
     "admin:build": "node scripts/build-admin.mjs",
     "admin:test": "node --test backend/test/*.test.mjs",
     "admin:local": "node scripts/admin-local.mjs",

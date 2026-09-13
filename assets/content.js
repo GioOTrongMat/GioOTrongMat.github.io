@@ -1,128 +1,19 @@
-/* Content is applied before the existing animation/event code starts. */
-window.siteReady = (async () => {
-  const $ = (s) => document.querySelector(s);
-  const text = (s, value) => { const el = $(s); if (el) el.textContent = value ?? ''; };
-  const url = (value, fallback = '') => {
-    if (!value) return fallback;
-    try { const u = new URL(value, location.href); return ['https:', 'http:'].includes(u.protocol) ? u.href : fallback; } catch { return fallback; }
-  };
-  const embed = (value, hero = false) => {
-    try {
-      const u = new URL(value);
-      let id;
-      if (u.hostname === 'youtu.be') id = u.pathname.slice(1);
-      if (['youtube.com','www.youtube.com','m.youtube.com'].includes(u.hostname)) id = u.searchParams.get('v') || u.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1];
-      if (id && /^[\w-]{11}$/.test(id)) return `https://www.youtube.com/embed/${id}` + (hero ? `?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&playsinline=1&enablejsapi=1` : '');
-      if (!hero && u.hostname === 'drive.google.com') {
-        id = u.pathname.match(/\/file\/d\/([\w-]+)/)?.[1] || u.searchParams.get('id');
-        if (id && /^[\w-]+$/.test(id)) return `https://drive.google.com/file/d/${id}/preview`;
-      }
-    } catch {}
-    return '';
-  };
-  const mp4 = value => {
-    if (!value) return '';
-    try {
-      const u = new URL(value, location.href);
-      const localUpload = value.startsWith('/uploads/') && u.origin === location.origin;
-      const remoteFile = u.protocol === 'https:';
-      return (localUpload || remoteFile) && /\.mp4$/i.test(u.pathname) ? u.href : '';
-    } catch { return ''; }
-  };
-  const workCard = work => {
-    const href = url(work.link);
-    const card = document.createElement('a');
-    card.className = 'work-card';
-    card.href = href || '#works';
-    card.setAttribute('aria-label', work.name);
-    if (href) { card.target = '_blank'; card.rel = 'noopener noreferrer'; }
-    else card.setAttribute('aria-disabled', 'true');
-
-    const placeholder = document.createElement('div');
-    placeholder.className = 'work-card-placeholder';
-    placeholder.textContent = work.name;
-    card.append(placeholder);
-
-    const thumbnail = url(work.image);
-    if (thumbnail) {
-      const image = document.createElement('img');
-      image.className = 'work-card-cover';
-      image.src = thumbnail;
-      image.alt = work.name;
-      image.loading = 'lazy';
-      card.append(image);
-    } else card.classList.add('missing-thumbnail');
-
-    const videoSource = mp4(work.video);
-    if (videoSource) {
-      const video = document.createElement('video');
-      video.className = 'work-card-video';
-      video.src = videoSource;
-      video.preload = 'metadata';
-      video.loop = true;
-      video.muted = true;
-      video.playsInline = true;
-      card.classList.add('has-video');
-      card.append(video);
-    }
-
-    const overlay = document.createElement('div');
-    overlay.className = 'work-card-overlay';
-    const info = document.createElement('div');
-    info.className = 'work-card-info';
-    const name = document.createElement('p');
-    name.className = 'work-name';
-    name.textContent = work.name;
-    info.append(name);
-    card.append(overlay, info);
-    if (href) { const icon = document.createElement('span'); icon.className = 'work-card-link-icon'; card.append(icon); }
-    return card;
-  };
-  const response = await fetch('content/site.json', {cache:'no-cache',signal:AbortSignal.timeout(8000)});
-  if (!response.ok) throw new Error(`Content: ${response.status}`);
-  const d = await response.json();
-  for (const key of ['hero','about','works','projects','stats','contact','layout']) if (!d[key]) throw new Error(`Missing ${key}`);
-  for (const [obj,key] of [[d.hero,'lines'],[d.about,'tags'],[d.works,'items'],[d.projects,'items'],[d.layout,'sections']]) if (!Array.isArray(obj[key])) obj[key]=[];
-  if (!Array.isArray(d.stats)) d.stats=[];
-  document.title = d.title;
-  $('.nav-logo img').src = url(d.logo);
-  text('.hero-label',d.hero.label); text('.hero-sub',d.hero.subtitle);
-  $('.hero-title').replaceChildren(...d.hero.lines.map(line=>{const span=document.createElement('span');span.className='line';span.textContent=line.text;return span;}));
-  const heroURL=embed(d.hero.youtube,true); if(heroURL) $('#heroYT').src=heroURL;
-  text('.instructor-eyebrow',d.about.heading);text('.instructor-name',d.about.name);
-  $('#ins-img img').src=url(d.about.image); $('#ins-img img').alt=d.about.name;
-  text('.instructor-bio',d.about.bio);text('.instructor-quote',d.about.quote);text('.instructor-quote-wrap p:last-child','— '+d.about.author+' —');
-  $('.instructor-tags').replaceChildren(...d.about.tags.map(tag=>{const el=document.createElement('span');el.className='job-tag';el.textContent=tag.text;return el;}));
-  $('.marquee-track').replaceChildren(...Array.from({length:6},()=>d.about.tags.map(tag=>{const el=document.createElement('span');el.className='marquee-item';el.textContent='✦ '+tag.text;return el;})).flat());
-  text('#works .section-title',d.works.heading); text('#works .section-cta',d.works.cta);
-  text('nav a[href="#works"]',d.works.heading);text('.hero-btn-primary',d.works.heading);
-  text('nav a[href="#instructor"]',d.about.heading);text('.hero-btn-secondary',d.about.heading);
-  text('nav a[href="#process"]',d.projects.heading);
-  $('.works-grid').replaceChildren(...d.works.items.map(workCard));
-  text('#process .section-title',d.projects.heading);
-  $('#sliderTrack').replaceChildren(...d.projects.items.map((project,i)=>{
-    const slide=document.createElement('div');slide.className='slide'+(i===0?' active':'');slide.dataset.index=i;slide.dataset.ratio=project.ratio;
-    const src=embed(project.url);
-    if(src){const frame=document.createElement('iframe');frame.src=src;frame.title=project.name;frame.allow='autoplay; encrypted-media; fullscreen';frame.allowFullscreen=true;frame.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;';slide.append(frame);}
-    else {const p=document.createElement('p');p.textContent='Video chưa có link hợp lệ';slide.append(p);}
-    return slide;
-  }));
-  $('#sliderDots').replaceChildren(...d.projects.items.map((p,i)=>{const dot=document.createElement('button');dot.type='button';dot.className='slider-dot'+(i===0?' active':'');dot.dataset.dot=i;dot.setAttribute('aria-label',p.name);return dot;}));
-  for(const s of ['#btnPrev','#btnNext']) $(s).hidden=d.projects.items.length<2;
-  window.siteStats={};
-  $('.stats-grid').replaceChildren(...d.stats.map((stat,i)=>{const item=document.createElement('div');item.className='stat-item';const num=document.createElement('div');num.className='stat-num';const span=document.createElement('span');span.id='n'+(i+1);span.textContent='0';window.siteStats[span.id]=Math.max(0,Math.min(1000000,Number(stat.value)||0));num.append(span,'+');const label=document.createElement('div');label.className='stat-label';label.textContent=stat.label;item.append(num,label);return item;}));
-  const heading=d.contact.heading.split('\n');$('.contact-title').replaceChildren();heading.forEach((line,i)=>{if(i) $('.contact-title').append(document.createElement('br'));const el=document.createElement(i?'em':'span');el.textContent=line;$('.contact-title').append(el);});
-  text('.contact-sub',d.contact.description);text('.contact-email',d.contact.email);$('.contact-email').href='mailto:'+d.contact.email;
-  const ids=['hero','instructor','works','stats','process','contact'];const seen=new Set();
-  const anchor=document.createComment('Content sections');document.body.insertBefore(anchor,$('#hero'));
-  for(const section of [...d.layout.sections,...ids.map(id=>({id,visible:true}))]){
-    if(!ids.includes(section.id)||seen.has(section.id))continue;seen.add(section.id);
-    const el=document.getElementById(section.id);el.hidden=section.visible===false;anchor.before(el);
-    if(section.id==='hero'){const marquee=$('.marquee-wrap');marquee.hidden=el.hidden;anchor.before(marquee);}
-    document.querySelectorAll(`a[href="#${section.id}"]`).forEach(a=>a.hidden=el.hidden);
-  }
-  anchor.remove();
-  document.body.dataset.workColumns=['1','2','3'].includes(String(d.layout.columns))?d.layout.columns:'3';
-  document.body.dataset.aboutImage=d.layout.aboutImage==='right'?'right':'left';
-  for(const [key,name] of [['accent','--gold'],['background','--ink']]) if(/^#[0-9a-f]{6}$/i.test(d.layout[key]))document.documentElement.style.setProperty(name,d.layout[key]);
-})().catch(error => { console.error('Không tải được nội dung quản trị:',error); });
+window.siteReady=(async()=>{
+ const $=s=>document.querySelector(s),txt=(s,v)=>{const e=$(s);if(e)e.textContent=v??''},safe=(v,f='')=>{try{const u=new URL(v,location.href);return /https?:/.test(u.protocol)?u.href:f}catch{return f}},thumb=v=>{try{const u=new URL(v,location.href),id=u.hostname==='drive.google.com'&&(u.pathname.match(/\/file\/d\/([\w-]+)/)?.[1]||u.searchParams.get('id'));return id?`https://drive.google.com/thumbnail?id=${id}&sz=w1080`:safe(v)}catch{return safe(v)}};
+ const drive=v=>{try{const u=new URL(v),id=u.hostname==='drive.google.com'&&(u.pathname.match(/^\/file\/d\/([\w-]+)/)?.[1]||u.searchParams.get('id'));return id?`https://drive.google.com/file/d/${id}/view`:''}catch{return''}};
+ const embed=(v,hero=false)=>{try{const u=new URL(v);let id;if(u.hostname==='youtu.be')id=u.pathname.slice(1);if(['youtube.com','www.youtube.com','m.youtube.com'].includes(u.hostname))id=u.searchParams.get('v')||u.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1];if(id&&/^[\w-]{11}$/.test(id))return`https://www.youtube.com/embed/${id}`+(hero?`?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&playsinline=1&enablejsapi=1`:'');if(!hero&&u.hostname==='drive.google.com'){id=u.pathname.match(/\/file\/d\/([\w-]+)/)?.[1]||u.searchParams.get('id');if(id)return`https://drive.google.com/file/d/${id}/preview`}}catch{}return''};
+ const legacy=v=>{try{const u=new URL(v,location.href);return ((v||'').startsWith('/')||u.protocol==='https:')&&/\.mp4$/i.test(u.pathname)?u.href:''}catch{return''}};
+ let active;
+ function reset(a,unload=false){const v=a?.querySelector('video');if(!v)return;v.pause();try{v.currentTime=0}catch{}v.muted=true;v.volume=1;v.style.opacity='';a.classList.remove('is-previewing');if(unload)v.removeAttribute('src');if(active===a)active=null}
+ function workCard(w,i){const href=drive(w.fullVideo),a=document.createElement('a');a.className='work-card';a.href=href||'#works';a.dataset.index=i;a.ariaLabel=href?`${w.name} — mở video đầy đủ`:w.name;if(href){a.target='_blank';a.rel='noopener noreferrer'}else{a.ariaDisabled='true';a.onclick=e=>e.preventDefault()}
+  const p=document.createElement('div');p.className='work-card-placeholder';p.textContent=w.name||'Untitled';a.append(p);const src=thumb(w.image);if(src){const im=document.createElement('img');im.className='work-card-cover';im.src=src;im.alt=w.name||'';im.loading='lazy';a.append(im)}
+  const preview=w.id?`/work-previews/${encodeURIComponent(w.id)}.mp4`:legacy(w.legacyPreview||w.video);if(preview){const v=document.createElement('video');v.className='work-card-video';v.preload='none';v.playsInline=true;v.muted=true;v.dataset.src=preview;v.ontimeupdate=()=>{if(v.currentTime>=10){const f=Math.min(1,(v.currentTime-10)/3);v.volume=1-f;v.style.opacity=String(1-f)}if(v.currentTime>=12.95){reset(a);a.classList.add('preview-finished')}};v.onerror=()=>reset(a,true);a.append(v)}
+  const o=document.createElement('div');o.className='work-card-overlay';const info=document.createElement('div');info.className='work-card-info';const n=document.createElement('p');n.className='work-name';n.textContent=w.name||'';info.append(n);a.append(o,info);
+  a.onmouseenter=async()=>{if(matchMedia('(hover:none)').matches||a.classList.contains('preview-finished'))return;const v=a.querySelector('video');if(!v)return;if(active&&active!==a)reset(active,true);active=a;if(!v.src)v.src=v.dataset.src;v.volume=1;v.muted=false;try{await v.play();a.classList.add('is-previewing')}catch{v.muted=true;try{await v.play();a.classList.add('is-previewing')}catch{reset(a)}}};a.onmouseleave=()=>{a.classList.remove('preview-finished');reset(a,true)};return a}
+ function works(items){const grid=$('.works-grid');grid.replaceChildren(...items.map(workCard));const viewport=document.createElement('div');viewport.className='works-viewport';grid.before(viewport);viewport.append(grid);const root=document.createElement('div');root.className='works-slider';viewport.before(root);root.append(viewport);const controls=document.createElement('div');controls.className='works-controls',prev=document.createElement('button'),next=document.createElement('button'),status=document.createElement('span');for(const[b,c,l]of[[prev,'works-nav works-prev','Tác phẩm trước'],[next,'works-nav works-next','Tác phẩm sau']]){b.type='button';b.className=c;b.textContent=b===prev?'←':'→';b.ariaLabel=l}status.className='works-status';status.ariaLive='polite';controls.append(prev,next,status);root.append(controls);let pos=0,visible=1;
+  const update=()=>{const first=grid.firstElementChild,gap=parseFloat(getComputedStyle(root).getPropertyValue('--gap'))||0;visible=first?Math.max(1,Math.round((root.clientWidth+gap)/(first.getBoundingClientRect().width+gap))):1;const max=Math.max(0,items.length-visible);pos=Math.max(0,Math.min(pos,max));grid.style.transform=`translateX(${-pos*((first?.getBoundingClientRect().width||0)+gap)}px)`;prev.disabled=pos===0;next.disabled=pos===max;controls.hidden=max===0;status.textContent=`Hiển thị ${items.length?pos+1:0}–${Math.min(items.length,pos+visible)} / ${items.length}`};prev.onclick=()=>{pos--;update()};next.onclick=()=>{pos++;update()};new ResizeObserver(update).observe(root);requestAnimationFrame(update);
+  grid.onmouseover=e=>{if(matchMedia('(hover:none)').matches)return;const c=e.target.closest('.work-card');if(!c)return;const cards=[...grid.children],i=cards.indexOf(c);cards.forEach((x,j)=>{const d=j-i;x.classList.toggle('is-hovered',!d);x.style.setProperty('--dock-s',!d?'1.18':'1');x.style.setProperty('--dock-x',d===-1?'-15px':d===1?'15px':d===-2?'-6px':d===2?'6px':'0');x.style.setProperty('--dock-r',d===-1?'-2deg':d===1?'2deg':d===-2?'-1deg':d===2?'1deg':'0')})};grid.onmouseleave=()=>[...grid.children].forEach(x=>{x.classList.remove('is-hovered');['--dock-s','--dock-x','--dock-r'].forEach(p=>x.style.removeProperty(p))})}
+ const r=await fetch('content/site.json',{cache:'no-cache',signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error(`Content: ${r.status}`);const d=await r.json();for(const[o,k]of[[d.hero,'lines'],[d.about,'tags'],[d.works,'items'],[d.projects,'items'],[d.layout,'sections']])if(!Array.isArray(o[k]))o[k]=[];document.title=d.title;$('.nav-logo img').src=safe(d.logo);txt('.hero-label',d.hero.label);txt('.hero-sub',d.hero.subtitle);$('.hero-title').replaceChildren(...d.hero.lines.map(x=>Object.assign(document.createElement('span'),{className:'line',textContent:x.text})));const hu=embed(d.hero.youtube,true);if(hu)$('#heroYT').src=hu;txt('.instructor-eyebrow',d.about.heading);txt('.instructor-name',d.about.name);$('#ins-img img').src=safe(d.about.image);txt('.instructor-bio',d.about.bio);txt('.instructor-quote',d.about.quote);txt('.instructor-quote-wrap p:last-child','— '+d.about.author+' —');$('.instructor-tags').replaceChildren(...d.about.tags.map(x=>Object.assign(document.createElement('span'),{className:'job-tag',textContent:x.text})));$('.marquee-track').replaceChildren(...Array.from({length:6},()=>d.about.tags.map(x=>Object.assign(document.createElement('span'),{className:'marquee-item',textContent:'✦ '+x.text}))).flat());txt('#works .section-title',d.works.heading);txt('#works .section-cta',d.works.cta);works(d.works.items);txt('#process .section-title',d.projects.heading);
+ $('#sliderTrack').replaceChildren(...d.projects.items.map((p,i)=>{const s=document.createElement('div');s.className='slide'+(i?'':' active');s.dataset.index=i;s.dataset.ratio=p.ratio;const src=embed(p.url);if(src){const f=document.createElement('iframe');f.src=src;f.title=p.name;f.allow='autoplay; encrypted-media; fullscreen';f.allowFullscreen=true;f.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none';s.append(f)}return s}));$('#sliderDots').replaceChildren(...d.projects.items.map((p,i)=>{const b=document.createElement('button');b.type='button';b.className='slider-dot'+(i?'':' active');b.dataset.dot=i;b.ariaLabel=p.name;return b}));window.siteStats={};$('.stats-grid').replaceChildren(...d.stats.map((s,i)=>{const x=document.createElement('div');x.className='stat-item';x.innerHTML=`<div class="stat-num"><span id="n${i+1}">0</span>+</div><div class="stat-label"></div>`;x.querySelector('.stat-label').textContent=s.label;window.siteStats['n'+(i+1)]=s.value;return x}));txt('.contact-sub',d.contact.description);txt('.contact-email',d.contact.email);$('.contact-email').href='mailto:'+d.contact.email;
+ const ids=['hero','instructor','works','stats','process','contact'],seen=new Set(),anchor=document.createComment('Content sections');document.body.insertBefore(anchor,$('#hero'));for(const s of [...d.layout.sections,...ids.map(id=>({id,visible:true}))]){if(!ids.includes(s.id)||seen.has(s.id))continue;seen.add(s.id);const el=document.getElementById(s.id);el.hidden=s.visible===false;anchor.before(el);if(s.id==='hero'){const m=$('.marquee-wrap');m.hidden=el.hidden;anchor.before(m)}}anchor.remove();document.body.dataset.aboutImage=d.layout.aboutImage==='right'?'right':'left';for(const[k,n]of[['accent','--gold'],['background','--ink']])if(/^#[\da-f]{6}$/i.test(d.layout[k]))document.documentElement.style.setProperty(n,d.layout[k])
+})().catch(e=>console.error('Không tải được nội dung quản trị:',e));

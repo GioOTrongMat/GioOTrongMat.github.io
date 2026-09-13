@@ -25,7 +25,8 @@ export function validateContent(raw){
  str(d.title,200);link(d.logo);assert(d.hero&&d.about&&d.works&&d.projects&&d.contact&&d.layout,'Thiếu phần nội dung.');
  str(d.hero.label);str(d.hero.subtitle);link(d.hero.youtube);list(d.hero.lines,1,5);d.hero.lines.forEach(x=>str(x.text,200));
  for(const k of ['heading','name','bio','quote','author'])str(d.about[k]);link(d.about.image);list(d.about.tags,0,30);d.about.tags.forEach(x=>str(x.text,200));
- str(d.works.heading);str(d.works.cta);d.works.items??=[];list(d.works.items,0,100);d.works.items.forEach(x=>{str(x.name,200);link(x.image);link(x.video,true);link(x.link,true);});
+ const drive=v=>{if(!v)return;link(v);let u;try{u=new URL(v);}catch{}const id=u?.hostname==='drive.google.com'&&(u.pathname.match(/^\/file\/d\/([\w-]+)/)?.[1]||u.searchParams.get('id'));assert(id&&id.length>=10,'Video full phải là link HTTPS Google Drive dạng file.');};
+ str(d.works.heading);str(d.works.cta);d.works.items??=[];list(d.works.items,0,100);const workIds=new Set();d.works.items.forEach((x,i)=>{str(x.name,200);link(x.image);str(x.id||'',100);assert(/^[a-z0-9][a-z0-9-]{2,80}$/.test(x.id||''),'Tác phẩm thiếu mã ổn định.');assert(!workIds.has(x.id),'Mã tác phẩm bị trùng.');workIds.add(x.id);drive(x.fullVideo);link(x.legacyPreview||x.video,true);});
  str(d.projects.heading);d.projects.items??=[];list(d.projects.items,0,100);d.projects.items.forEach(x=>{str(x.name,200);link(x.url);assert(['16:9','9:16'].includes(x.ratio),'Tỷ lệ không hợp lệ.');});
  list(d.stats,1,6);d.stats.forEach(x=>{assert(Number.isInteger(x.value)&&x.value>=0&&x.value<=1000000,'Số liệu không hợp lệ.');str(x.label,200);});
  str(d.contact.heading);str(d.contact.description);str(d.contact.email,254);assert(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.contact.email),'Email không hợp lệ.');

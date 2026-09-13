@@ -6,7 +6,7 @@
 <title>VIBE — Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script defer src="assets/content.js?v=2"></script>
+<script defer src="assets/content.js?v=3"></script>
 <style>
   @font-face {
     font-family: 'Ameyallinda';
@@ -1417,7 +1417,7 @@
     .instructor-img-placeholder img { max-width: 80%; margin: 0 auto; }
   }
 </style>
-<link rel="stylesheet" href="assets/content.css?v=2">
+<link rel="stylesheet" href="assets/content.css?v=3">
 </head>
 <body>
 
@@ -1973,25 +1973,6 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
     sliderScrollObs.observe(sliderOuter);
   }
 
-  // Work card hover: muted preview; reset completely on leave
-  document.querySelectorAll('.work-card').forEach(card => {
-    const vid = card.querySelector('.work-card-video');
-    if (!vid) return;
-
-    card.addEventListener('mouseenter', () => {
-      vid.currentTime = 0;
-      vid.muted = true;
-      vid.play().catch(() => {});
-    });
-
-    card.addEventListener('mouseleave', () => {
-      vid.pause();
-      vid.currentTime = 0;
-      vid.muted = true;
-      card.classList.remove('video-playing');
-    });
-  });
-
   // Hide fixed video bg when scrolled past hero
   const heroEl = document.getElementById('hero');
   const heroVid = document.querySelector('.hero-video-wrap');
@@ -2002,11 +1983,6 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
   }, { threshold: 0 });
   if (heroEl) heroObs.observe(heroEl);
 
-  // Hover on work cards — reveal SVG
-  document.querySelectorAll('.work-card svg').forEach(svg => {
-    svg.parentElement.parentElement.addEventListener('mouseenter', () => { svg.style.opacity = '0.35'; });
-    svg.parentElement.parentElement.addEventListener('mouseleave', () => { svg.style.opacity = '0.15'; });
-  });
 }); });
 </script>
 </body>

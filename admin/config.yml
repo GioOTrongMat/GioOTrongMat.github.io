@@ -47,6 +47,12 @@
                   "widget": "list",
                   "fields": [
                     {
+                      "name": "id",
+                      "label": "ID",
+                      "widget": "hidden",
+                      "required": false
+                    },
+                    {
                       "name": "text",
                       "label": "Nội dung",
                       "widget": "string"
@@ -143,20 +149,21 @@
                     },
                     {
                       "name": "image",
-                      "label": "Thumbnail / ảnh bìa",
-                      "widget": "image"
+                      "label": "Thumbnail",
+                      "widget": "image",
+                      "hint": "Ảnh sẽ tự crop giữa theo tỷ lệ 9:16 và lưu WebP 1080 × 1920."
                     },
                     {
-                      "name": "video",
-                      "label": "Video hover MP4",
-                      "widget": "file",
-                      "required": false,
-                      "hint": "Video hover MP4 — upload file MP4 hoặc nhập URL trực tiếp tới file .mp4. Không dùng link YouTube/Google Drive."
-                    },
-                    {
-                      "name": "link",
-                      "label": "Link khi bấm",
+                      "name": "fullVideo",
+                      "label": "Video full Google Drive",
                       "widget": "string",
+                      "required": false,
+                      "hint": "Dán link Google Drive của video đầy đủ."
+                    },
+                    {
+                      "name": "legacyPreview",
+                      "label": "Legacy preview",
+                      "widget": "hidden",
                       "required": false
                     }
                   ],
