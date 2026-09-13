@@ -1,0 +1,137 @@
+{
+  "title": "Gió Ở Trong Mắt — Portfolio",
+  "logo": "/logo.png",
+  "hero": {
+    "label": "✦ Gió ở trong mắt ✦",
+    "lines": [
+      {
+        "text": "FPV."
+      },
+      {
+        "text": "Cinematic."
+      },
+      {
+        "text": "Creator."
+      }
+    ],
+    "subtitle": "FPV Pilot · Filmmaker · Content Creator",
+    "youtube": "https://www.youtube.com/watch?v=e45dsJIzdSs"
+  },
+  "about": {
+    "heading": "About Me",
+    "name": "Gió Ở Trong Mắt",
+    "image": "/portrai.png",
+    "bio": "I started out in graphic design, directly involved in building visual identities for major brands in the Vietnamese market such as Anker, UAG,... Over time, I realized that conveying messages through visuals alone wasn't enough to satisfy my creative needs and push my limits — so I made the shift into content production.\n\nOver more than 3 years on TikTok, I've had the opportunity to collaborate with brands of all sizes, including Sprite and Milo,… building up experience in storytelling, concept development, and connecting with audiences.\n\nRight now, I'm on a journey searching for inspiration — not just to keep making content, but to redefine the way I tell stories and create value in my creative work.",
+    "quote": "Logic will get you from A to B.\nImagination will take you everywhere",
+    "author": "Albert Einstein",
+    "tags": [
+      {
+        "text": "Graphic Design"
+      },
+      {
+        "text": "Video Editor"
+      },
+      {
+        "text": "Content Creator"
+      },
+      {
+        "text": "FPV Cinematic Pilot"
+      }
+    ]
+  },
+  "works": {
+    "heading": "My Works",
+    "cta": "View All Works",
+    "items": [
+      {
+        "name": "Sprite",
+        "image": "/Sprite.png",
+        "video": "/Video1.mp4",
+        "link": "#contact"
+      },
+      {
+        "name": "Milo",
+        "image": "/Milo.png",
+        "video": "/Video2.mp4",
+        "link": "#contact"
+      },
+      {
+        "name": "Rockstar",
+        "image": "/Rockstar.png",
+        "video": "/Video3.mp4",
+        "link": "#contact"
+      }
+    ]
+  },
+  "projects": {
+    "heading": "My Projects",
+    "items": [
+      {
+        "name": "Project 1",
+        "url": "https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/view",
+        "ratio": "16:9"
+      },
+      {
+        "name": "Project 2",
+        "url": "https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/view",
+        "ratio": "9:16"
+      },
+      {
+        "name": "Project 3",
+        "url": "https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/view",
+        "ratio": "16:9"
+      }
+    ]
+  },
+  "stats": [
+    {
+      "value": 7,
+      "label": "Years of Experience"
+    },
+    {
+      "value": 50,
+      "label": "Brand Collaborations"
+    },
+    {
+      "value": 1000,
+      "label": "Projects Completed"
+    }
+  ],
+  "contact": {
+    "heading": "Let's create\nsomething together",
+    "description": "Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours.",
+    "email": "giootrongmat@gmail.com"
+  },
+  "layout": {
+    "sections": [
+      {
+        "id": "hero",
+        "visible": true
+      },
+      {
+        "id": "instructor",
+        "visible": true
+      },
+      {
+        "id": "works",
+        "visible": true
+      },
+      {
+        "id": "stats",
+        "visible": true
+      },
+      {
+        "id": "process",
+        "visible": true
+      },
+      {
+        "id": "contact",
+        "visible": true
+      }
+    ],
+    "columns": "3",
+    "aboutImage": "left",
+    "accent": "#C9A84C",
+    "background": "#0E0C09"
+  }
+}

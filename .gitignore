@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.*
+*.log
+
+.dev.vars*
+.wrangler/
+backend/public/
+backend/local/
+.secrets/

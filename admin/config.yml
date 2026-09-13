@@ -1,0 +1,349 @@
+{
+  "backend": {
+    "name": "github",
+    "repo": "GioOTrongMat/GioOTrongMat.github.io",
+    "branch": "main"
+  },
+  "local_backend": true,
+  "media_folder": "uploads",
+  "public_folder": "/uploads",
+  "site_url": "https://giootrongmat.github.io",
+  "display_url": "https://giootrongmat.github.io",
+  "locale": "vi",
+  "collections": [
+    {
+      "name": "website",
+      "label": "Website",
+      "files": [
+        {
+          "name": "site",
+          "label": "Nội dung & bố cục",
+          "file": "content/site.json",
+          "format": "json",
+          "fields": [
+            {
+              "name": "title",
+              "label": "Tiêu đề tab",
+              "widget": "string"
+            },
+            {
+              "name": "logo",
+              "label": "Logo",
+              "widget": "image"
+            },
+            {
+              "name": "hero",
+              "label": "Mở đầu",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "label",
+                  "label": "Nhãn",
+                  "widget": "string"
+                },
+                {
+                  "name": "lines",
+                  "label": "Các dòng tiêu đề",
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "text",
+                      "label": "Nội dung",
+                      "widget": "string"
+                    }
+                  ],
+                  "min": 1,
+                  "max": 5
+                },
+                {
+                  "name": "subtitle",
+                  "label": "Mô tả",
+                  "widget": "string"
+                },
+                {
+                  "name": "youtube",
+                  "label": "Link YouTube",
+                  "widget": "string"
+                }
+              ]
+            },
+            {
+              "name": "about",
+              "label": "Giới thiệu",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "heading",
+                  "label": "Tiêu đề mục",
+                  "widget": "string"
+                },
+                {
+                  "name": "name",
+                  "label": "Tên",
+                  "widget": "string"
+                },
+                {
+                  "name": "image",
+                  "label": "Ảnh chân dung",
+                  "widget": "image"
+                },
+                {
+                  "name": "bio",
+                  "label": "Giới thiệu",
+                  "widget": "text"
+                },
+                {
+                  "name": "quote",
+                  "label": "Trích dẫn",
+                  "widget": "text"
+                },
+                {
+                  "name": "author",
+                  "label": "Tác giả",
+                  "widget": "string"
+                },
+                {
+                  "name": "tags",
+                  "label": "Chuyên môn",
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "text",
+                      "label": "Tên",
+                      "widget": "string"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "works",
+              "label": "Tác phẩm",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "heading",
+                  "label": "Tiêu đề",
+                  "widget": "string"
+                },
+                {
+                  "name": "cta",
+                  "label": "Nút xem thêm",
+                  "widget": "string"
+                },
+                {
+                  "name": "items",
+                  "label": "Danh sách tác phẩm",
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "label": "Tên",
+                      "widget": "string"
+                    },
+                    {
+                      "name": "image",
+                      "label": "Ảnh bìa",
+                      "widget": "image"
+                    },
+                    {
+                      "name": "video",
+                      "label": "Video MP4 (file hoặc URL)",
+                      "widget": "file",
+                      "required": false
+                    },
+                    {
+                      "name": "link",
+                      "label": "Link khi bấm",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false,
+                  "default": []
+                }
+              ]
+            },
+            {
+              "name": "projects",
+              "label": "Dự án",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "heading",
+                  "label": "Tiêu đề",
+                  "widget": "string"
+                },
+                {
+                  "name": "items",
+                  "label": "Danh sách dự án",
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "name",
+                      "label": "Tên",
+                      "widget": "string"
+                    },
+                    {
+                      "name": "url",
+                      "label": "Link YouTube hoặc Google Drive",
+                      "widget": "string"
+                    },
+                    {
+                      "name": "ratio",
+                      "label": "Tỷ lệ",
+                      "widget": "select",
+                      "options": [
+                        "16:9",
+                        "9:16"
+                      ]
+                    }
+                  ],
+                  "required": false,
+                  "default": []
+                }
+              ]
+            },
+            {
+              "name": "stats",
+              "label": "Số liệu",
+              "widget": "list",
+              "fields": [
+                {
+                  "name": "value",
+                  "label": "Giá trị",
+                  "widget": "number",
+                  "value_type": "int",
+                  "min": 0,
+                  "max": 1000000
+                },
+                {
+                  "name": "label",
+                  "label": "Nhãn",
+                  "widget": "string"
+                }
+              ],
+              "min": 1,
+              "max": 6
+            },
+            {
+              "name": "contact",
+              "label": "Liên hệ",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "heading",
+                  "label": "Tiêu đề",
+                  "widget": "text"
+                },
+                {
+                  "name": "description",
+                  "label": "Mô tả",
+                  "widget": "text"
+                },
+                {
+                  "name": "email",
+                  "label": "Email",
+                  "widget": "string"
+                }
+              ]
+            },
+            {
+              "name": "layout",
+              "label": "Bố cục",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "sections",
+                  "label": "Kéo để sắp xếp các phần",
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "label": "Phần",
+                      "widget": "hidden",
+                      "options": [
+                        {
+                          "label": "Mở đầu",
+                          "value": "hero"
+                        },
+                        {
+                          "label": "Giới thiệu",
+                          "value": "instructor"
+                        },
+                        {
+                          "label": "Tác phẩm",
+                          "value": "works"
+                        },
+                        {
+                          "label": "Số liệu",
+                          "value": "stats"
+                        },
+                        {
+                          "label": "Dự án",
+                          "value": "process"
+                        },
+                        {
+                          "label": "Liên hệ",
+                          "value": "contact"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "visible",
+                      "label": "Hiển thị",
+                      "widget": "boolean",
+                      "default": true
+                    }
+                  ],
+                  "min": 6,
+                  "max": 6,
+                  "allow_add": false,
+                  "hint": "Giữ mỗi phần đúng một lần; kéo để đổi vị trí hoặc tắt Hiển thị."
+                },
+                {
+                  "name": "columns",
+                  "label": "Số cột tác phẩm trên máy tính",
+                  "widget": "select",
+                  "options": [
+                    "1",
+                    "2",
+                    "3"
+                  ]
+                },
+                {
+                  "name": "aboutImage",
+                  "label": "Vị trí ảnh giới thiệu",
+                  "widget": "select",
+                  "options": [
+                    {
+                      "label": "Bên trái",
+                      "value": "left"
+                    },
+                    {
+                      "label": "Bên phải",
+                      "value": "right"
+                    }
+                  ]
+                },
+                {
+                  "name": "accent",
+                  "label": "Màu nhấn",
+                  "widget": "color"
+                },
+                {
+                  "name": "background",
+                  "label": "Màu nền",
+                  "widget": "color"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    }
+  ]
+}

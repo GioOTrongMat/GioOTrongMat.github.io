@@ -3,18 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gió Ở Trong Mắt | FPV Cinematic</title>
-  <meta property="og:title" content="Gió Ở Trong Mắt | FPV Cinematic">
-  <meta property="og:description" content="Gió ở Trong Mắt | FPV Cinematic">
-  <meta property="og:image" content="https://giootrongmat.com/og-image.png">
-  <meta property="og:url" content="https://giootrongmat.com">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://giootrongmat.com/og-image.png">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHBvbHlnb24gcG9pbnRzPSIxNiwyIDE5LDEyIDI5LDE2IDE5LDIwIDE2LDMwIDEzLDIwIDMsMTYgMTMsMTIiIGZpbGw9IiNDOUE4NEMiLz4KPC9zdmc+">
+<title>VIBE — Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-<script src="https://www.youtube.com/iframe_api"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script defer src="assets/content.js"></script>
 <style>
   @font-face {
     font-family: 'Ameyallinda';
@@ -88,10 +80,10 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 18px 3rem;
+    padding: 1.2rem 3rem;
     background: linear-gradient(to bottom, rgba(10,8,5,0.92) 0%, rgba(10,8,5,0) 100%);
     backdrop-filter: blur(2px);
   }
@@ -104,17 +96,7 @@
     text-transform: uppercase;
     text-decoration: none;
     opacity: 0;
-    grid-column: 2;
-    text-align: center;
-    animation: fadeDownLogo 0.8s ease 0.2s forwards;
-  }
-
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    justify-content: flex-end;
-    grid-column: 3;
+    animation: fadeDown 0.8s ease 0.2s forwards;
   }
 
   .nav-links {
@@ -126,8 +108,7 @@
   }
 
   .nav-links a {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.2em;
     color: var(--cream);
@@ -147,28 +128,7 @@
   }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Unmute button — always visible at 10%, full on hero hover (only while muted) */
-  #unmuteBtn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    z-index: 5;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #0a0805;
-    background: #ffffff;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 100px;
-    cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s;
-  }
-  /* Hero unmute/mute button */
+  /* Unmute button */
   #unmuteBtn {
     position: absolute;
     top: 50%;
@@ -179,116 +139,22 @@
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: #0a0805;
-    background: #ffffff;
+    color: var(--ink);
+    background: rgba(245,240,232,0.92);
     border: none;
-    padding: 0.75rem 2rem;
+    padding: 0.8rem 2rem;
     border-radius: 100px;
     cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, background 0.3s;
-  }
-  /* Muted state: hidden, reveal fully on hero hover */
-  #unmuteBtn.is-muted {
-    opacity: 0;
-    pointer-events: none;
-  }
-  #hero:hover #unmuteBtn.is-muted {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  /* Unmuted state: always 10%, only 100% when hovering the button itself */
-  #unmuteBtn:not(.is-muted) {
-    opacity: 0.1;
-    pointer-events: auto;
-  }
-  #unmuteBtn:not(.is-muted):hover {
-    opacity: 1;
-  }
-  #hero:hover #unmuteBtn:not(.is-muted) {
-    opacity: 0.1;
-  }
-  #unmuteBtn:hover { background: var(--gold); }
-
-  /* Transparent div to block YouTube native controls on hover */
-  .yt-blocker {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    background: transparent;
-    pointer-events: auto;
+    transition: opacity 0.3s, background 0.3s, transform 0.3s;
+    backdrop-filter: blur(4px);
   }
 
-  /* Hamburger button — hidden on desktop */
-  .nav-hamburger {
-    display: none;
-    grid-column: 3;
-    justify-self: end;
-    background: none;
-    border: none;
-    color: var(--cream);
-    cursor: pointer;
-    padding: 4px;
-    z-index: 101;
+  #unmuteBtn:hover {
+    background: var(--gold);
+    transform: translate(-50%, -50%) scale(1.05);
   }
 
-  /* Mobile dropdown menu */
-  .nav-mobile-menu {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 99;
-    background: rgba(10,8,5,0.97);
-    backdrop-filter: blur(12px);
-    padding: 6rem 2rem 2.5rem;
-    transform: translateY(-100%);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .nav-mobile-menu.open {
-    transform: translateY(0);
-  }
-  .nav-mobile-menu ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-  }
-  .nav-mobile-menu a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.3em;
-    color: var(--cream);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  .nav-mobile-menu a:hover { color: var(--gold); }
-
-  /* Switch to hamburger at 900px */
-  @media (max-width: 900px) {
-    .nav-links { display: none !important; }
-    .nav-hamburger { display: block; }
-    .nav-mobile-menu { display: block; }
-    .lang-switch-track {
-      width: 2.6rem;
-      height: 1.4rem;
-    }
-    .lang-switch-thumb {
-      width: 1.1rem;
-      height: 1.1rem;
-      left: 0.13rem;
-    }
-    .lang-switch.is-vi .lang-switch-thumb {
-      left: calc(100% - 1.23rem);
-    }
-    .lang-switch-label {
-      font-size: 0.55rem;
-    }
-  }
-
-
+  /* Overlay — normal dark, lighter when unmuted */
   .hero-overlay {
     transition: background 0.8s ease;
   }
@@ -306,7 +172,7 @@
     overflow: hidden;
     display: flex;
     align-items: flex-end;
-    padding: 0 0 10vw 10vw;
+    padding: 0 0 10vh 10vw;
   }
 
   /* Fixed video background — cinema feel */
@@ -314,8 +180,20 @@
     position: fixed;
     inset: 0;
     z-index: -1;
-    overflow: hidden;
   }
+
+  /* Letterbox bars — cinema aspect */
+  .hero-video-wrap::before,
+  .hero-video-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 8vh;
+    background: var(--ink);
+    z-index: 2;
+  }
+  .hero-video-wrap::before { top: 0; }
+  .hero-video-wrap::after  { bottom: 0; }
 
   .hero-video-wrap video {
     position: absolute;
@@ -325,19 +203,6 @@
     object-fit: cover;
     object-position: center;
     display: block;
-  }
-
-  /* YouTube iframe — always cover full viewport regardless of screen ratio */
-  .hero-video-wrap iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    /* Use max() to ensure both dimensions are always fully covered */
-    width: max(100vw, 177.78vh);  /* 16/9 × 100vh */
-    height: max(100vh, 56.25vw); /* 9/16 × 100vw */
-    transform: translate(-50%, -50%);
-    border: none;
-    pointer-events: none;
   }
 
   /* Placeholder when no video */
@@ -448,10 +313,9 @@
   }
 
   .hero-btn {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
     text-decoration: none;
     padding: 0.85rem 2rem;
@@ -484,20 +348,16 @@
   /* Scroll indicator — fixed at bottom center, same layer as video */
   .hero-scroll {
     position: fixed;
-    bottom: 4vw;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: max-content;
-    transform: none;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    z-index: 3;
+    z-index: 1;
     opacity: 0;
     animation: fadeUp 1s ease 1.8s forwards;
-    text-align: center;
   }
 
   .scroll-line {
@@ -541,12 +401,13 @@
   }
 
   /* All sections below hero sit above the fixed video */
-  .marquee-wrap, #about-me, #works, #projects, footer {
+  .marquee-wrap, #instructor, #works, #stats, #process, footer {
     position: relative;
     z-index: 10;
     background: var(--ink);
   }
 
+  #stats { background: var(--paper); }
 
   /* ── MARQUEE ── */
   .marquee-wrap {
@@ -594,18 +455,15 @@
 
   .section-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 4rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
     padding-bottom: 2rem;
-    text-align: center;
-    position: relative;
   }
 
   .section-num {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
     color: var(--gold);
     letter-spacing: 0.3em;
@@ -627,7 +485,6 @@
     border-bottom: 1px solid var(--mist);
     padding-bottom: 2px;
     transition: color 0.3s, border-color 0.3s;
-  }
   }
   .section-cta:hover { color: var(--gold); border-color: var(--gold); }
 
@@ -700,12 +557,11 @@
     aspect-ratio: 9/16;
   }
 
-  /* Card — now a div, no link */
+  /* Card as link */
   .work-card {
     text-decoration: none;
     color: inherit;
     display: block;
-    cursor: default;
   }
 
   /* Cover image — shown by default */
@@ -716,7 +572,6 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    opacity: 1;
     transition: opacity 0.4s ease;
     z-index: 2;
   }
@@ -726,28 +581,15 @@
     position: absolute;
     inset: 0;
     width: 100%; height: 100%;
-    border: none;
+    object-fit: cover;
+    object-position: center;
+    display: block;
     opacity: 0;
     transition: opacity 0.4s ease;
     z-index: 3;
-    pointer-events: none;
   }
 
-  /* YouTube iframe in work cards — cover entire card */
-  .work-card iframe.work-card-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    /* Portrait 9:16 video: make height fill card, then scale width proportionally.
-       Use whichever is bigger to ensure full cover with no black bars */
-    width: max(100%, 56.25%);
-    height: max(100%, 177.78%);
-    transform: translate(-50%, -50%);
-    border: none;
-    pointer-events: none;
-  }
-
-  /* When hovered: hide cover, show iframe */
+  /* When hovered: hide cover, show video */
   .work-card:hover .work-card-cover { opacity: 0; }
   .work-card:hover .work-card-video  { opacity: 1; }
 
@@ -773,11 +615,13 @@
     transition: opacity 0.3s, transform 0.3s, background 0.3s;
     pointer-events: none;
   }
+
   .work-card:hover .card-unmute-btn {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
+
   .card-unmute-btn:hover { background: var(--gold); }
 
   .work-card-link-icon {
@@ -879,39 +723,11 @@
     animation: ringPulse 4s ease-in-out infinite;
   }
 
-  .process-contact-cover {
-    position: relative;
-    z-index: 10;
-    background: var(--ink);
-  }
-
-  #projects {
-    background: var(--ink);
-    position: relative;
-    z-index: 10;
-  }
-
+  /* ── STATS SECTION ── */
   #stats {
-    position: relative;
-    z-index: 10;
     padding: 6rem 3rem;
     background: var(--paper);
     color: var(--ink);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-
-    /* pop-up from background */
-    opacity: 0;
-    transform: scale(0.85) translateY(60px);
-    transition: opacity 0.6s ease,
-                transform 0.8s cubic-bezier(0.34, 1.45, 0.64, 1);
-  }
-
-  #stats.visible {
-    opacity: 1;
-    transform: scale(1) translateY(0);
   }
 
   .stats-grid {
@@ -919,30 +735,29 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     max-width: 900px;
-    width: 100%;
+    margin: 0 auto;
     text-align: center;
   }
 
   .stat-item {
     border-top: 1px solid rgba(14,12,9,0.15);
-    border-bottom: 1px solid rgba(14,12,9,0.15);
-    padding: 1.5rem 0;
+    padding-top: 1.5rem;
     opacity: 0;
-    transform: scale(0.5) translateY(50px);
-    transition: opacity 0.4s ease 0.5s,
-                transform 0.7s cubic-bezier(0.34, 1.58, 0.64, 1) 0.5s;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .stat-item[style*="0.15s"] {
-    transition-delay: 0.65s !important;
-  }
-  .stat-item[style*="0.3s"] {
-    transition-delay: 0.8s !important;
+  .stat-item {
+    border-top: 1px solid rgba(14,12,9,0.15);
+    padding-top: 1.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .stat-item.visible {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0);
   }
 
   .stat-num {
@@ -951,26 +766,6 @@
     line-height: 1;
     letter-spacing: -0.03em;
     color: var(--ink);
-    display: inline-block;
-  }
-
-  .stat-item.visible .stat-num {
-    animation: statPop 0.65s cubic-bezier(0.34, 1.58, 0.64, 1) forwards;
-    animation-delay: 0.5s;
-  }
-  .stat-item[style*="0.15s"].visible .stat-num {
-    animation-delay: 0.65s;
-  }
-  .stat-item[style*="0.3s"].visible .stat-num {
-    animation-delay: 0.8s;
-  }
-
-  @keyframes statPop {
-    0%   { transform: scale(0.4); }
-    55%  { transform: scale(1.18); }
-    75%  { transform: scale(0.94); }
-    90%  { transform: scale(1.04); }
-    100% { transform: scale(1); }
   }
 
   .stat-num span {
@@ -988,15 +783,16 @@
   }
 
   /* ── PROCESS VIDEO SLIDER ── */
-  #projects {
+  #process {
     padding: 0 0 3rem 0;
     border-bottom: 1px solid rgba(201,168,76,0.15);
   }
 
   /* Header sticks while video resizes below */
-  #projects .section-header {
+  #process .section-header {
     padding: 8rem 3rem 2rem;
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: 20;
     background: var(--ink);
     margin-bottom: 0;
@@ -1012,7 +808,6 @@
     transform: scale(1.5);
     opacity: 0.4;
     transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
-    min-height: calc(68vw * 9/16 + 6rem);
   }
 
   .slider-outer.slider-visible {
@@ -1051,10 +846,6 @@
   .slider-wrap {
     overflow: hidden;
     width: 100%;
-    min-height: calc(68vw * 9 / 16);
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .slider-track {
@@ -1080,12 +871,6 @@
     opacity: 0;
     margin: 0;
     pointer-events: none;
-  }
-
-  /* Slide cover — thumbnail overlay before play */
-  .slide-cover {
-    z-index: 2;
-    transition: opacity 0.3s ease;
   }
 
   /* Active slide: full size, centered */
@@ -1262,7 +1047,7 @@
     padding: 8rem 3rem;
     border-top: 1px solid rgba(201,168,76,0.15);
     position: relative;
-    z-index: 5;
+    z-index: 10;
     background: var(--ink);
   }
 
@@ -1271,9 +1056,6 @@
     grid-template-columns: 1fr 1fr;
     gap: 6rem;
     align-items: start;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .contact-title {
@@ -1290,11 +1072,10 @@
   }
 
   .contact-sub {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
     font-size: 1rem;
     color: var(--mist);
     line-height: 1.8;
+    font-weight: 300;
     margin-bottom: 2rem;
   }
 
@@ -1328,8 +1109,7 @@
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 2px;
     padding: 1rem 1.2rem;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 1rem;
     color: var(--cream);
     outline: none;
@@ -1350,8 +1130,7 @@
 
   .contact-submit {
     margin-top: 1.5rem;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
@@ -1432,11 +1211,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  @keyframes fadeDownLogo {
-    from { opacity: 0; transform: translateY(-15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(100%); }
     to { opacity: 1; transform: translateY(0); }
@@ -1470,22 +1244,21 @@
   }
 
   /* ── INSTRUCTOR SECTION ── */
-  #about-me {
-    padding: 8rem 3rem 3rem;
+  #instructor {
+    padding: 8rem 3rem;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     overflow: hidden;
   }
 
   .instructor-layout {
     display: grid;
-    grid-template-columns: minmax(280px, 400px) minmax(300px, 520px);
+    grid-template-columns: minmax(280px, 400px) 1fr;
     gap: 4rem;
     align-items: start;
     margin-bottom: 4rem;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
-    justify-content: center;
   }
 
   /* Image wrap */
@@ -1513,9 +1286,6 @@
     height: auto;
     display: block;
     object-fit: contain;
-    margin-left: auto;
-    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   }
 
   .instructor-img-placeholder::before {
@@ -1556,8 +1326,7 @@
   .instructor-text.reveal { opacity: 1; transform: translateX(0); }
 
   .instructor-eyebrow {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-family: 'Space Mono', monospace;
     font-size: 0.6rem;
     letter-spacing: 0.35em;
     color: var(--gold);
@@ -1574,8 +1343,7 @@
   }
 
   .instructor-bio {
-    font-family: 'Roboto', sans-serif;
-    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    font-size: 1.5rem;
     color: var(--mist);
     line-height: 1.8;
     font-weight: 300;
@@ -1617,12 +1385,7 @@
     transition-delay: 0.3s;
   }
 
-  .instructor-quote-wrap.reveal,
-  .instructor-quote-wrap.reveal-up {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 0.3s;
-  }
+  .instructor-quote-wrap.reveal { opacity: 1; transform: translateY(0); }
 
   .instructor-quote {
     font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -1638,102 +1401,23 @@
 
   /* Responsive */
   @media (max-width: 768px) {
-    nav { padding: 1.5rem; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
-    .works-grid { grid-template-columns: 1fr; align-items: center; justify-items: center; }
-    .work-card { max-width: 280px; width: 100%; }
-    .work-card:first-child { grid-row: span 1; aspect-ratio: 9/16; }
+    nav { padding: 1.5rem; }
+    .nav-links { display: none; }
+    .works-grid { grid-template-columns: 1fr; }
+    .work-card:first-child { grid-row: span 1; aspect-ratio: 4/3; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .process-item { grid-template-columns: 60px 1fr; }
     .process-desc { display: none; }
     footer { flex-direction: column; gap: 2rem; text-align: center; }
     .footer-info { text-align: center; }
     .footer-social { justify-content: center; }
-    #works, #projects, #about-me { padding: 5rem 1.5rem; }
+    #works, #process, #instructor { padding: 5rem 1.5rem; }
     #stats { padding: 4rem 1.5rem; }
     .instructor-layout { grid-template-columns: 1fr; gap: 2rem; }
     .instructor-img-placeholder img { max-width: 80%; margin: 0 auto; }
   }
-
-  /* ── LANGUAGE SWITCH ── */
-  .lang-switch {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    cursor: pointer;
-    user-select: none;
-    justify-self: start;
-    align-self: center;
-  }
-  .lang-switch-label {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.35);
-    transition: color 0.3s ease;
-    min-width: 1.6rem;
-    text-align: center;
-    text-transform: uppercase;
-  }
-  .lang-switch.is-en .lang-label-en,
-  .lang-switch.is-vi .lang-label-vi {
-    color: var(--cream);
-  }
-  .lang-switch-track {
-    position: relative;
-    width: 3.8rem;
-    height: 2rem;
-    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12));
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow:
-      inset 0 4px 10px rgba(0,0,0,0.7),
-      inset 0 1px 3px rgba(0,0,0,0.5),
-      0 1px 1px rgba(255,255,255,0.08);
-    transition: background 0.3s ease;
-    flex-shrink: 0;
-  }
-  .lang-switch:hover .lang-switch-track {
-    background: rgba(255,255,255,0.13);
-  }
-  .lang-switch-thumb {
-    position: absolute;
-    top: 50%;
-    left: 0.18rem;
-    transform: translateY(-50%);
-    width: 1.65rem;
-    height: 1.65rem;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #ffffff, #d0d0d0);
-    box-shadow:
-      0 4px 10px rgba(0,0,0,0.6),
-      0 2px 4px rgba(0,0,0,0.4),
-      0 1px 1px rgba(255,255,255,0.3) inset,
-      0 -1px 2px rgba(0,0,0,0.3) inset;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: left 0.35s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.2s ease;
-  }
-  .lang-switch-thumb:hover {
-    box-shadow:
-      0 6px 14px rgba(0,0,0,0.7),
-      0 3px 6px rgba(0,0,0,0.5),
-      0 1px 1px rgba(255,255,255,0.3) inset;
-  }
-  .lang-switch-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    display: block;
-  }
-  .lang-switch.is-vi .lang-switch-thumb {
-    left: calc(100% - 1.83rem);
-  }
-
 </style>
+<link rel="stylesheet" href="assets/content.css">
 </head>
 <body>
 
@@ -1742,40 +1426,15 @@
 
 <!-- NAV -->
 <nav>
-  <div class="lang-switch" id="langSwitch" onclick="toggleLang()" aria-label="Toggle language" role="button">
-    <span class="lang-switch-label lang-label-en">EN</span>
-    <div class="lang-switch-track">
-      <div class="lang-switch-thumb" id="langThumb"><img id="langFlag" src="https://flagcdn.com/w40/gb.png" alt="EN"></div>
-    </div>
-    <span class="lang-switch-label lang-label-vi">VI</span>
-  </div>
   <a href="#" class="nav-logo">
-    <img src="logo.png" alt="Gió ở trong mắt" style="height:42px;width:auto;padding-top:2px;">
+    <img src="logo.png" alt="Gió ở trong mắt" style="height:32px;width:auto;">
   </a>
-  <div class="nav-right">
-    <ul class="nav-links">
-      <li><a href="#works" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a></li>
-      <li><a href="#projects" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
-      <li><a href="#about-me" data-en="About Me" data-vi="Về Mình">About Me</a></li>
-    </ul>
-  </div>
-  <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()" aria-label="Menu">
-    <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-      <rect y="0" width="22" height="2" rx="1" fill="currentColor"/>
-      <rect y="7" width="22" height="2" rx="1" fill="currentColor"/>
-      <rect y="14" width="22" height="2" rx="1" fill="currentColor"/>
-    </svg>
-  </button>
-</nav>
-
-<!-- Mobile menu dropdown -->
-<div class="nav-mobile-menu" id="navMobileMenu">
-  <ul>
-    <li><a href="#works" onclick="toggleMenu()" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a></li>
-    <li><a href="#projects" onclick="toggleMenu()" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</a></li>
-    <li><a href="#about-me" onclick="toggleMenu()" data-en="About Me" data-vi="Về Mình">About Me</a></li>
+  <ul class="nav-links">
+    <li><a href="#works">My Works</a></li>
+    <li><a href="#process">My Projects</a></li>
+    <li><a href="#instructor">About Me</a></li>
   </ul>
-</div>
+</nav>
 
 <!-- HERO -->
 <section id="hero">
@@ -1783,34 +1442,34 @@
   <div class="hero-video-wrap">
     <iframe id="heroYT"
       src="https://www.youtube.com/embed/e45dsJIzdSs?autoplay=1&mute=1&loop=1&playlist=e45dsJIzdSs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+      style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"
       allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <div class="yt-blocker"></div>
   </div>
 
   <!-- Cinematic overlay — dims on mute, brightens on unmute -->
   <div class="hero-overlay" id="heroOverlay"></div>
 
   <!-- Unmute button -->
-  <button id="unmuteBtn" class="is-muted" onclick="toggleMute()">Unmute</button>
+  <button id="unmuteBtn" onclick="toggleMute()">Unmute</button>
 
   <!-- Content — bottom left -->
   <div class="hero-content">
-    <p class="hero-label">✦ Gió ở Trong Mắt ✦</p>
+    <p class="hero-label">✦ Gió ở trong mắt ✦</p>
     <h1 class="hero-title">
       <span class="line">FPV.</span>
       <span class="line">Cinematic.</span>
       <span class="line">Creator.</span>
     </h1>
-    <p class="hero-sub" >FPV Pilot · Filmmaker · Content Creator</p>
+    <p class="hero-sub">FPV Pilot · Filmmaker · Content Creator</p>
     <div class="hero-ctas">
-      <a href="#works" class="hero-btn hero-btn-primary" data-en="My Works" data-vi="Sự Hợp Tác">My Works</a>
-      <a href="#about-me" class="hero-btn hero-btn-secondary" data-en="About Me" data-vi="Về Mình">About Me</a>
+      <a href="#works" class="hero-btn hero-btn-primary">My Works</a>
+      <a href="#instructor" class="hero-btn hero-btn-secondary">About Me</a>
     </div>
   </div>
 
   <!-- Scroll -->
   <div class="hero-scroll">
-    <span class="scroll-text" data-en="Scroll" data-vi="Cuộn xuống">Scroll</span>
+    <span class="scroll-text">Scroll</span>
     <div class="scroll-line"></div>
   </div>
 </section>
@@ -1846,30 +1505,25 @@
 </div>
 
 <!-- INSTRUCTOR -->
-<section id="about-me">
+<section id="instructor">
   <div class="instructor-layout">
     <!-- Image — from left -->
     <div class="instructor-img-wrap" id="ins-img">
       <div class="instructor-img-placeholder" style="background:transparent;overflow:visible;border:none;">
-        <img src="https://drive.google.com/thumbnail?id=1wKtolLz_ezrYvPdhvgY35jy6YGENLepr&sz=w800" alt="Gió Ở Trong Mắt" style="width:100%;height:auto;display:block;object-fit:contain;">
+        <img src="portrai.png" alt="Gió Ở Trong Mắt" style="width:100%;height:auto;display:block;object-fit:contain;">
       </div>
     </div>
 
     <!-- Text — from right -->
     <div class="instructor-text" id="ins-text">
-      <p class="instructor-eyebrow" data-en="About Me" data-vi="Về Mình">About Me</p>
+      <p class="instructor-eyebrow">About Me</p>
       <h2 class="instructor-name">Gió Ở Trong Mắt</h2>
       <p class="instructor-bio">
-        <span data-lang="en">I started out in graphic design, directly involved in building visual identities for major brands in the Vietnamese market such as Anker, UAG,... Over time, I realized that conveying messages through visuals alone wasn't enough to satisfy my creative needs and push my limits — so I made the shift into content production.
+        I started out in graphic design, directly involved in building visual identities for major brands in the Vietnamese market such as Anker, UAG,... Over time, I realized that conveying messages through visuals alone wasn't enough to satisfy my creative needs and push my limits — so I made the shift into content production.
         <br><br>
         Over more than 3 years on TikTok, I've had the opportunity to collaborate with brands of all sizes, including Sprite and Milo,… building up experience in storytelling, concept development, and connecting with audiences.
         <br><br>
-        Right now, I'm on a journey searching for inspiration — not just to keep making content, but to redefine the way I tell stories and create value in my creative work.</span>
-        <span data-lang="vi" style="display:none;">Bắt đầu từ thiết kế đồ hoạ, trực tiếp xây dựng hình ảnh thương hiệu cho các nhãn hàng lớn tại thị trường Việt Nam như Anker, UAG,... Dần dần, mình nhận ra rằng chỉ truyền tải thông điệp qua hình ảnh tĩnh là chưa đủ để thoả mãn nhu cầu sáng tạo và thử thách bản thân. Từ đó, mình chuyển hướng trở thành "nhà ráng tạo nội dung".
-        <br><br>
-        Hơn 3 năm làm TikTok, mình đã có cơ hội hợp tác với các thương hiệu lớn nhỏ, bao gồm Sprite, Milo,… tích luỹ kinh nghiệm kể chuyện, phát triển concept và kết nối với khán giả.
-        <br><br>
-        Hiện tại, mình đang trên hành trình tìm kiếm cảm hứng — không chỉ để tiếp tục làm nội dung, mà để định nghĩa lại cách mình kể chuyện và tạo ra giá trị trong công việc sáng tạo.</span>
+        Right now, I'm on a journey searching for inspiration — not just to keep making content, but to redefine the way I tell stories and create value in my creative work.
       </p>
       <div class="instructor-tags">
         <span class="job-tag">Graphic Design</span>
@@ -1882,11 +1536,8 @@
 
   <!-- Quote — from bottom -->
   <div class="instructor-quote-wrap" id="ins-quote">
-    <p class="instructor-quote">
-      <span data-lang="en">Logic will get you from A to B.<br>Imagination will take you everywhere</span>
-      <span data-lang="vi" style="display:none;">Logic sẽ đưa bạn từ A đến B.<br>Trí tưởng tượng sẽ đưa bạn đến mọi nơi</span>
-    </p>
-    <p style="text-align:center;font-family:'Roboto',sans-serif;font-weight:500;font-size:0.8rem;letter-spacing:0.15em;color:var(--mist);margin-top:1.2rem;">— Albert Einstein —</p>
+    <p class="instructor-quote">Logic will get you from A to B.<br>Imagination will take you everywhere</p>
+    <p style="text-align:center;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--mist);margin-top:1.2rem;">— Albert Einstein —</p>
   </div>
 </section>
 
@@ -1894,33 +1545,32 @@
 <section id="works">
   <div class="section-header">
     <div>
-      <h2 class="section-title" data-en="My Works" data-vi="Sự Hợp Tác">My Works</h2>
+      <h2 class="section-title">My Works</h2>
     </div>
+    <a href="#contact" class="section-cta">View All Works</a>
   </div>
 
   <div class="works-grid">
     <!-- CARD 1 — từ TRÁI
          Ảnh bìa: src="cover1.jpg"
-         Video hover: src="video1.mp4"
+         Video hover: src="Video1.mp4"
          Link: href="..." -->
-    <div class="work-card" style="background:#1A1610;">
-      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1yPmeZdZZ12WeLmlHJwsN5x8vifPsR70X&sz=w600" alt="Sprite">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/PXFg4as2Szo?mute=1embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&loop=1embed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&playlist=PXFg4as2Szoembed/PXFg4as2Szo?autoplay=1&mute=1&loop=1&playlist=PXFg4as2Szo&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      <div class="yt-blocker"></div>
-      <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
+    <a class="work-card" href="#" target="_blank" style="background:#1A1610;">
+      <img class="work-card-cover" src="Sprite.png" alt="Sprite">
+      <video class="work-card-video" src="Video1.mp4" loop muted playsinline></video>
       <div class="card-shape">
         <div class="shape-ring" style="width:160px;height:160px;border-color:rgba(201,168,76,0.2);animation-delay:0s;"></div>
         <div class="shape-ring" style="width:100px;height:100px;border-color:rgba(201,168,76,0.35);animation-delay:0.8s;"></div>
         <div class="shape-ring" style="width:50px;height:50px;border-color:rgba(201,168,76,0.5);animation-delay:1.6s;"></div>
       </div>
-    </div>
+      <div class="work-card-link-icon"></div>
+      <button class="card-unmute-btn" data-muted="true">Unmute</button>
+    </a>
 
     <!-- CARD 2 — từ TRÊN -->
-    <div class="work-card" style="background:#160F0F;">
-      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1xqAkZh_Q8SaQ9_lN0xZGfTIOeKKScH2q&sz=w600" alt="Magi">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/PGASOPTMZZM?autoplay=1&mute=1&loop=1&playlist=PGASOPTMZZM&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      <div class="yt-blocker"></div>
-      <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
+    <a class="work-card" href="#" target="_blank" style="background:#160F0F;">
+      <img class="work-card-cover" src="Milo.png" alt="Milo">
+      <video class="work-card-video" src="Video2.mp4" loop muted playsinline></video>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;transition:opacity 0.5s;">
           <polygon points="150,20 280,180 20,180" fill="none" stroke="#B84A2E" stroke-width="1"/>
@@ -1928,14 +1578,14 @@
           <polygon points="150,80 220,160 80,160" fill="none" stroke="#B84A2E" stroke-width="0.5"/>
         </svg>
       </div>
-    </div>
+      <div class="work-card-link-icon"></div>
+      <button class="card-unmute-btn" data-muted="true">Unmute</button>
+    </a>
 
     <!-- CARD 3 — từ PHẢI -->
-    <div class="work-card" style="background:#0D1515;">
-      <img class="work-card-cover" src="https://drive.google.com/thumbnail?id=1-R8OWLjwc0csrBZ71eoYsDwD6v2eVLWC&sz=w600" alt="Warrior">
-      <iframe class="work-card-video" src="https://www.youtube.com/embed/i2XtrUIC3kA?autoplay=1&mute=1&loop=1&playlist=i2XtrUIC3kA&controls=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      <div class="yt-blocker"></div>
-      <button class="card-unmute-btn" onclick="toggleCardMute(this)">Unmute</button>
+    <a class="work-card" href="#" target="_blank" style="background:#0D1515;">
+      <img class="work-card-cover" src="Rockstar.png" alt="Rockstar">
+      <video class="work-card-video" src="Video3.mp4" loop muted playsinline></video>
       <div class="card-shape">
         <svg viewBox="0 0 300 200" style="width:75%;opacity:0.15;">
           <circle cx="60" cy="100" r="50" fill="none" stroke="#1D9E75" stroke-width="1"/>
@@ -1944,125 +1594,89 @@
           <circle cx="150" cy="100" r="20" fill="rgba(29,158,117,0.3)"/>
         </svg>
       </div>
-    </div>
-  </div>
-  <div style="text-align:center; margin-top: 1.5rem;">
-    <p style="font-family:'Space Mono',monospace; font-size:0.85rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--mist); margin-bottom: 2rem;"><span data-lang="en">Featured brand collaborations on TikTok</span><span data-lang="vi" style="display:none;">Các thương hiệu đã hợp tác trên TikTok</span></p>
-    <a href="#contact" class="section-cta" data-en="View All Works" data-vi="Xem Tất Cả">View All Works</a>
+      <div class="work-card-link-icon"></div>
+      <button class="card-unmute-btn" data-muted="true">Unmute</button>
+    </a>
   </div>
 </section>
 
-
-<!-- Spacer holds layout when process-contact-cover is fixed -->
-<div id="cover-spacer" style="display:none;"></div>
-
-<!-- STATS -->
+<!-- STATS / TAGS -->
 <section id="stats">
   <div class="stats-grid">
     <div class="stat-item">
       <div class="stat-num"><span id="n1">0</span>+</div>
-      <div class="stat-label" data-en="Years of Experience" data-vi="Năm Kinh Nghiệm">Years of Experience</div>
+      <div class="stat-label">Years of Experience</div>
     </div>
     <div class="stat-item" style="transition-delay:0.15s;">
       <div class="stat-num"><span id="n2">0</span>+</div>
-      <div class="stat-label" data-en="Brand Collaborations" data-vi="Thương Hiệu Hợp Tác">Brand Collaborations</div>
+      <div class="stat-label">Brand Collaborations</div>
     </div>
     <div class="stat-item" style="transition-delay:0.3s;">
       <div class="stat-num"><span id="n3">0</span>+</div>
-      <div class="stat-label" data-en="Projects Completed" data-vi="Dự Án Hoàn Thành">Projects Completed</div>
+      <div class="stat-label">Projects Completed</div>
     </div>
   </div>
 </section>
 
-<!-- PROCESS + CONTACT BLOCK -->
-<div class="process-contact-cover">
-
-<!-- PROCESS -->
-<section id="projects">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title" data-en="My Projects" data-vi="Dự Án Cá Nhân">My Projects</h2>
-      </div>
+<!-- PROCESS VIDEO SLIDER -->
+<section id="process">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">My Projects</h2>
     </div>
+  </div>
 
-    <div class="slider-outer">
-      <button class="slider-btn" id="btnPrev">&#8592;</button>
+  <div class="slider-outer">
+    <button class="slider-btn" id="btnPrev">&#8592;</button>
 
-      <div class="slider-wrap">
-        <div class="slider-track" id="sliderTrack">
+    <div class="slider-wrap">
+      <div class="slider-track" id="sliderTrack">
 
-          <!-- SLIDE 1 — 16:9 -->
-          <div class="slide active" data-index="0">
-            <iframe src="https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/preview"
-              style="position:absolute;inset:0;width:100%;height:100%;border:none;"
-              allow="autoplay" allowfullscreen></iframe>
-            <div class="slide-cover" onclick="this.style.display='none';muteAllSources();"
-              style="position:absolute;inset:0;cursor:pointer;background:url('https://drive.google.com/thumbnail?id=1PhxkkKPHWChhcnD5cFoz6Zz7C12ruzhd&sz=w1280') center/cover no-repeat;">
-              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                  <circle cx="32" cy="32" r="31" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
-                  <polygon points="26,20 48,32 26,44" fill="white"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <!-- SLIDE 2 — 16:9 -->
-          <div class="slide" data-index="1">
-            <iframe src="https://drive.google.com/file/d/1Nl2tAMc27K56Ts1MDXedjz7Mg95wgnlH/preview"
-              style="position:absolute;inset:0;width:100%;height:100%;border:none;"
-              allow="autoplay" allowfullscreen></iframe>
-            <div class="slide-cover" onclick="this.style.display='none';muteAllSources();"
-              style="position:absolute;inset:0;cursor:pointer;background:url('https://drive.google.com/thumbnail?id=191DpZ2L46nsOHsFh_G_ivIlx3SoCf2Fy&sz=w1280') center/cover no-repeat;">
-              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                  <circle cx="32" cy="32" r="31" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
-                  <polygon points="26,20 48,32 26,44" fill="white"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <!-- SLIDE 3 — 16:9 -->
-          <div class="slide" data-index="2">
-            <iframe src="https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/preview"
-              style="position:absolute;inset:0;width:100%;height:100%;border:none;"
-              allow="autoplay" allowfullscreen></iframe>
-            <div class="slide-cover" onclick="this.style.display='none';muteAllSources();"
-              style="position:absolute;inset:0;cursor:pointer;background:url('https://drive.google.com/thumbnail?id=1Yl_mmtYlmY8bp5vfD4ITpDBKULpEgZ4j&sz=w1280') center/cover no-repeat;">
-              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                  <circle cx="32" cy="32" r="31" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
-                  <polygon points="26,20 48,32 26,44" fill="white"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-
+        <!-- SLIDE 1 — 16:9 -->
+        <div class="slide active" data-index="0">
+          <iframe src="https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen></iframe>
         </div>
-      </div>
 
-      <button class="slider-btn" id="btnNext">&#8594;</button>
+        <!-- SLIDE 2 — portrait 9:16 -->
+        <div class="slide" data-index="1" data-ratio="9:16">
+          <iframe src="https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen></iframe>
+        </div>
+
+        <!-- SLIDE 3 — 16:9 -->
+        <div class="slide" data-index="2">
+          <iframe src="https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen></iframe>
+        </div>
+
+      </div>
     </div>
 
-    <div class="slider-nav">
-      <div class="slider-dots" id="sliderDots">
-        <div class="slider-dot active" data-dot="0"></div>
-        <div class="slider-dot" data-dot="1"></div>
-        <div class="slider-dot" data-dot="2"></div>
-      </div>
-    </div>
-  </section>
+    <button class="slider-btn" id="btnNext">&#8594;</button>
+  </div>
 
-</div><!-- /.process-contact-cover -->
+  <div class="slider-nav">
+    <div class="slider-dots" id="sliderDots">
+      <div class="slider-dot active" data-dot="0"></div>
+      <div class="slider-dot" data-dot="1"></div>
+      <div class="slider-dot" data-dot="2"></div>
+    </div>
+  </div>
+</section>
 
 <!-- CONTACT -->
 <section id="contact">
   <div class="contact-layout">
     <!-- Left -->
     <div class="contact-left">
-      <p class="section-num" data-en="Contact" data-vi="Liên Hệ">Contact</p>
-      <h2 class="contact-title" data-en="Let's create" data-en-em="something together" data-vi="Hãy cùng nhau" data-vi-em="tạo nên điều khác biệt">Let's create<br><em>something together</em></h2>
-      <p class="contact-sub" data-en="Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours." data-vi="Dù là một dự án nhỏ hay một ý tưởng lớn, mình luôn sẵn sàng lắng nghe. Hãy để lại một lời chào, biết đâu chúng ta lại có duyên hợp tác, nhỉ :D">Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours.</p>
-      <a href="mailto:GioOTrongMat@gmail.com" class="contact-email">GioOTrongMat@gmail.com</a>
+      <p class="section-num">Contact</p>
+      <h2 class="contact-title">Let's create<br><em>something together</em></h2>
+      <p class="contact-sub">Whether it's a small project or a big idea, I'm always ready to listen. Leave me a message and I'll get back to you within 24 hours.</p>
+      <a href="mailto:giootrongmat@gmail.com" class="contact-email">giootrongmat@gmail.com</a>
     </div>
 
     <!-- Right: form -->
@@ -2070,20 +1684,20 @@
       <form id="contactForm" action="https://formspree.io/f/xnjlwpnz" method="POST">
         <div class="contact-row">
           <div class="contact-field">
-            <input type="text" name="firstName" placeholder="First Name" data-en-placeholder="First Name" data-vi-placeholder="Họ" required>
+            <input type="text" name="firstName" placeholder="First Name" required>
           </div>
           <div class="contact-field">
-            <input type="text" name="lastName" placeholder="Last Name" data-en-placeholder="Last Name" data-vi-placeholder="Tên" required>
+            <input type="text" name="lastName" placeholder="Last Name" required>
           </div>
         </div>
         <div class="contact-field">
-          <input type="email" name="email" placeholder="Email" data-en-placeholder="Email" data-vi-placeholder="Email" required>
+          <input type="email" name="email" placeholder="Email" required>
         </div>
         <div class="contact-field">
-          <textarea name="message" placeholder="Tell me about your project..." data-en-placeholder="Tell me about your project..." data-vi-placeholder="Kể mình nghe về dự án của bạn..." rows="5" required></textarea>
+          <textarea name="message" placeholder="Tell me about your project..." rows="5" required></textarea>
         </div>
         <button type="submit" class="contact-submit" id="submitBtn">
-          <span id="submitText" data-en="Send Message" data-vi="Gửi Tin Nhắn">Send Message</span>
+          <span id="submitText">Send Message</span>
         </button>
         <p id="formMsg" style="display:none;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold);margin-top:1rem;"></p>
       </form>
@@ -2093,6 +1707,7 @@
 
 
 <script>
+window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => {
   // YouTube iframe API
   var ytPlayer;
   var isMuted = true;
@@ -2103,49 +1718,28 @@
     });
   };
 
-  // ── SINGLE AUDIO SOURCE SYSTEM ──
-  // Mute every audio source: hero YT + all work cards
-  function muteAllSources() {
-    // Mute hero
-    if (ytPlayer && typeof ytPlayer.mute === 'function') {
-      ytPlayer.mute();
-      isMuted = true;
-      const btn = document.getElementById('unmuteBtn');
-      const overlay = document.getElementById('heroOverlay');
-      if (btn) { btn.classList.add('is-muted'); btn.textContent = 'Unmute'; }
-      if (overlay) overlay.classList.remove('unmuted');
-    }
-    // Mute all work cards
-    document.querySelectorAll('.card-unmute-btn').forEach(b => {
-      const card = b.closest('.work-card');
-      const iframe = card && card.querySelector('iframe.work-card-video');
-      const video  = card && card.querySelector('video.work-card-video');
-      if (iframe) iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
-      if (video)  { video.muted = true; video.volume = 0; }
-      b.textContent = 'Unmute';
-    });
-  }
-
   function toggleMute() {
     const btn = document.getElementById('unmuteBtn');
     const overlay = document.getElementById('heroOverlay');
     if (!ytPlayer) return;
     if (isMuted) {
-      muteAllSources();          // mute everything else first
       ytPlayer.unMute();
       ytPlayer.setVolume(80);
-      btn.classList.remove('is-muted');
       btn.textContent = 'Mute';
       overlay.classList.add('unmuted');
       isMuted = false;
     } else {
       ytPlayer.mute();
-      btn.classList.add('is-muted');
       btn.textContent = 'Unmute';
       overlay.classList.remove('unmuted');
       isMuted = true;
     }
   }
+
+  window.toggleMute = toggleMute;
+  const ytScript = document.createElement('script');
+  ytScript.src = 'https://www.youtube.com/iframe_api';
+  document.head.append(ytScript);
 
   // Cursor
   const cursor = document.getElementById('cursor');
@@ -2194,39 +1788,23 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.work-card').forEach(el => cardObs.observe(el));
 
-  // Instructor section — reveal on scroll down AND scroll back up
+  // Instructor section — reveal on scroll down, hide only when section exits upward
   const insImg   = document.getElementById('ins-img');
   const insText  = document.getElementById('ins-text');
   const insQuote = document.getElementById('ins-quote');
+  const insEls   = [insImg, insText, insQuote];
 
   const insObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        [insImg, insText].forEach(el => el.classList.add('reveal'));
-      } else {
-        [insImg, insText].forEach(el => {
-          el.classList.remove('reveal');
-          el.classList.remove('reveal-up');
-        });
+        insEls.forEach(el => el.classList.add('reveal'));
+      } else if (e.boundingClientRect.top > 0) {
+        insEls.forEach(el => el.classList.remove('reveal'));
       }
     });
   }, { threshold: 0.15 });
 
-  insObs.observe(document.getElementById('about-me'));
-
-  // Quote — separate observer, triggers when quote itself enters viewport
-  const quoteObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        insQuote.classList.add('reveal');
-      } else {
-        insQuote.classList.remove('reveal');
-        insQuote.classList.remove('reveal-up');
-      }
-    });
-  }, { threshold: 0.3 });
-
-  quoteObs.observe(insQuote);
+  insObs.observe(document.getElementById('instructor'));
 
   // Scroll reveal — stats only now
   const observer = new IntersectionObserver(entries => {
@@ -2257,6 +1835,7 @@
   }
 
   function goTo(idx) {
+    if (!total) return;
     // Stop current slide iframe/video
     const oldSlide = slides[current];
     oldSlide.classList.remove('active');
@@ -2269,9 +1848,6 @@
 
     slides[current].classList.add('active');
     dots[current].classList.add('active');
-    // Reset cover so it shows again on the new slide
-    const cover = slides[current].querySelector('.slide-cover');
-    if (cover) cover.style.display = '';
     const newVid = slides[current].querySelector('video');
     if (newVid) newVid.play();
   }
@@ -2284,78 +1860,34 @@
   let dragStart = null;
   track.addEventListener('mousedown',  e => { dragStart = e.clientX; });
   track.addEventListener('touchstart', e => { dragStart = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('click', () => { muteAllSources(); });
   track.addEventListener('mouseup',  e => { if (dragStart !== null && Math.abs(e.clientX - dragStart) > 40) goTo(e.clientX < dragStart ? current + 1 : current - 1); dragStart = null; });
   track.addEventListener('touchend', e => { if (dragStart !== null && Math.abs(e.changedTouches[0].clientX - dragStart) > 40) goTo(e.changedTouches[0].clientX < dragStart ? current + 1 : current - 1); dragStart = null; });
 
-  // Count-up runs only on first appearance; subsequent entries just fade in with final values
-  const targets = { n1: 7, n2: 50, n3: 1000 };
+  // Count-up animation for stats
+  const targets = window.siteStats || { n1: 7, n2: 50, n3: 1000 };
   const statsSection = document.getElementById('stats');
-  const statItems = statsSection.querySelectorAll('.stat-item');
-  let hasCountedOnce = false;
+  let counted = false;
 
-  function resetStats() {
-    statsSection.classList.remove('visible');
-    statItems.forEach(item => item.classList.remove('visible'));
-    if (!hasCountedOnce) {
-      Object.keys(targets).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '0'; });
-    }
-  }
-
-  function playStats() {
-    statsSection.offsetHeight;
-    statsSection.classList.add('visible');
-    statItems.forEach(item => { item.offsetHeight; item.classList.add('visible'); });
-
-    if (!hasCountedOnce) {
-      hasCountedOnce = true;
+  const statsObs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !counted) {
+      counted = true;
       Object.entries(targets).forEach(([id, end]) => {
         const el = document.getElementById(id);
-        if (!el) return;
         let start = 0;
         const step = end / 60;
-        const iv = setInterval(() => {
+        const interval = setInterval(() => {
           start += step;
-          if (start >= end) { start = end; clearInterval(iv); }
+          if (start >= end) {
+            start = end;
+            clearInterval(interval);
+          }
           el.textContent = Math.floor(start);
         }, 16);
       });
     }
-  }
+  }, { threshold: 0.5 });
 
-  let lastScrollY = window.scrollY;
-  window.addEventListener('scroll', () => { lastScrollY = window.scrollY; }, { passive: true });
-
-  // Trigger pop-up when section center reaches viewport center (scrolling down only)
-  let statsTriggered = false;
-
-  function checkStatsPosition() {
-    const rect = statsSection.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const sectionCenter = rect.top + rect.height / 2;
-    const viewportCenter = vh * 0.7;
-
-    if (!statsTriggered && sectionCenter <= viewportCenter && rect.top >= 0) {
-      // section center reached viewport center while coming from below → pop up
-      statsTriggered = true;
-      playStats();
-    } else if (statsTriggered && rect.top > vh) {
-      // section has gone back below viewport → reset
-      statsTriggered = false;
-      resetStats();
-    } else if (!statsTriggered && rect.bottom < 0) {
-      // section is above viewport (scrolled past) → show silently
-      statsSection.classList.add('visible');
-      statItems.forEach(item => item.classList.add('visible'));
-      Object.entries(targets).forEach(([id, end]) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = end;
-      });
-    }
-  }
-
-  window.addEventListener('scroll', checkStatsPosition, { passive: true });
-  checkStatsPosition();
+  statsObs.observe(statsSection);
 
   // Contact form — Formspree AJAX
   const form = document.getElementById('contactForm');
@@ -2441,45 +1973,46 @@
     sliderScrollObs.observe(sliderOuter);
   }
 
-  // Detect click inside Drive iframe via window blur
-  // When user clicks inside an iframe, window loses focus
-  window.addEventListener('blur', () => {
-    const activeSlide = document.querySelector('.slide.active');
-    const focusedOnSlider = activeSlide && activeSlide.querySelector('iframe');
-    if (focusedOnSlider) {
-      muteAllSources();
-    }
-    // Restore focus to window so next blur fires correctly
-    setTimeout(() => window.focus(), 300);
-  });
-
-  // Pin effect removed — layout flows naturally
-
-  // Work card hover: play/pause YouTube iframe, pause on leave if unmuted
+  // Work card hover: auto play WITH sound on enter, mute+pause on leave
   document.querySelectorAll('.work-card').forEach(card => {
     const vid = card.querySelector('.work-card-video');
+    const btn = card.querySelector('.card-unmute-btn');
     if (!vid) return;
-    const isIframe = vid.tagName === 'IFRAME';
 
     card.addEventListener('mouseenter', () => {
-      if (!isIframe) {
-        vid.play().catch(() => {});
-      } else {
-        vid.contentWindow.postMessage(
-          JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
-        );
-      }
+      vid.currentTime = 0;
+      vid.muted = false;
+      vid.volume = 0.8;
+      vid.play().catch(() => {
+        // If browser blocks unmuted autoplay, fallback to muted
+        vid.muted = true;
+        vid.play();
+      });
     });
 
     card.addEventListener('mouseleave', () => {
-      if (!isIframe) {
-        vid.pause();
-      } else {
-        vid.contentWindow.postMessage(
-          JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
-        );
-      }
+      vid.pause();
+      vid.currentTime = 0;
+      vid.muted = true;
+      if (btn) { btn.textContent = 'Unmute'; btn.dataset.muted = 'true'; }
     });
+
+    if (btn) {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (btn.dataset.muted === 'true') {
+          vid.muted = false;
+          vid.volume = 0.8;
+          btn.textContent = 'Mute';
+          btn.dataset.muted = 'false';
+        } else {
+          vid.muted = true;
+          btn.textContent = 'Unmute';
+          btn.dataset.muted = 'true';
+        }
+      });
+    }
   });
 
   // Hide fixed video bg when scrolled past hero
@@ -2492,85 +2025,12 @@
   }, { threshold: 0 });
   if (heroEl) heroObs.observe(heroEl);
 
-  function toggleMenu() {
-    const menu = document.getElementById('navMobileMenu');
-    const btn = document.getElementById('navHamburger');
-    menu.classList.toggle('open');
-    // Toggle icon between hamburger and X
-    const isOpen = menu.classList.contains('open');
-    btn.innerHTML = isOpen
-      ? `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
-      : `<svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect y="0" width="22" height="2" rx="1" fill="currentColor"/><rect y="7" width="22" height="2" rx="1" fill="currentColor"/><rect y="14" width="22" height="2" rx="1" fill="currentColor"/></svg>`;
-  }
-
-  // Toggle mute on work card iframes via YouTube postMessage API
-  function toggleCardMute(btn) {
-    const card = btn.closest('.work-card');
-    const iframe = card.querySelector('iframe.work-card-video');
-    const video = card.querySelector('video.work-card-video');
-    const wasМuted = btn.textContent.trim() === 'Unmute';
-    if (wasМuted) {
-      muteAllSources(); // mute hero + all other cards first
-      if (iframe) iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
-      if (video) { video.muted = false; video.volume = 0.8; }
-      btn.textContent = 'Mute';
-    } else {
-      if (iframe) iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
-      if (video) { video.muted = true; video.volume = 0; }
-      btn.textContent = 'Unmute';
-    }
-  }
-
   // Hover on work cards — reveal SVG
   document.querySelectorAll('.work-card svg').forEach(svg => {
     svg.parentElement.parentElement.addEventListener('mouseenter', () => { svg.style.opacity = '0.35'; });
     svg.parentElement.parentElement.addEventListener('mouseleave', () => { svg.style.opacity = '0.15'; });
   });
-
-  // ── LANGUAGE TOGGLE ──
-  let currentLang = 'en';
-
-  function toggleLang() {
-    currentLang = currentLang === 'en' ? 'vi' : 'en';
-    const sw = document.getElementById('langSwitch');
-    sw.classList.toggle('is-en', currentLang === 'en');
-    sw.classList.toggle('is-vi', currentLang === 'vi');
-    applyLang();
-  }
-
-  // Init switch state
-  (function() {
-    const sw = document.getElementById('langSwitch');
-    if (sw) { sw.classList.add('is-en'); }
-  })();
-
-  function applyLang() {
-    const lang = currentLang;
-    const flag = document.getElementById('langFlag');
-    if (flag) flag.src = lang === 'en' ? 'https://flagcdn.com/w40/gb.png' : 'https://flagcdn.com/w40/vn.png';
-
-    // Simple text nodes with data-en / data-vi
-    document.querySelectorAll('[data-en]').forEach(el => {
-      // Special case: contact-title has nested <em>
-      if (el.classList.contains('contact-title')) {
-        const mainText = el.getAttribute('data-' + lang);
-        const emText   = el.getAttribute('data-' + lang + '-em');
-        el.innerHTML = mainText + '<br><em>' + emText + '</em>';
-      } else {
-        el.textContent = el.getAttribute('data-' + lang);
-      }
-    });
-
-    // Bio spans
-    document.querySelectorAll('[data-lang]').forEach(el => {
-      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
-    });
-
-    // Input/textarea placeholders
-    document.querySelectorAll('[data-en-placeholder]').forEach(el => {
-      el.placeholder = el.getAttribute('data-' + lang + '-placeholder');
-    });
-  }
+}); });
 </script>
 </body>
 </html>

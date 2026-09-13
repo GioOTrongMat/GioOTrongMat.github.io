@@ -1,0 +1,9 @@
+import fs from 'node:fs';import path from 'node:path';import readline from 'node:readline';import {makePasswordRecord,random} from '../backend/auth-exports.mjs';
+const root=path.resolve(import.meta.dirname,'..');
+function hidden(prompt){return new Promise((resolve,reject)=>{if(!process.stdin.isTTY)return reject(Error('Mở lệnh này trong terminal tương tác.'));process.stdout.write(prompt);let value='';readline.emitKeypressEvents(process.stdin);process.stdin.setRawMode(true);process.stdin.resume();const handler=(str,key)=>{if(key?.ctrl&&key.name==='c'){process.exit(1);}if(key?.name==='return'){process.stdin.off('keypress',handler);process.stdin.setRawMode(false);process.stdin.pause();process.stdout.write('\n');resolve(value);}else if(key?.name==='backspace'){value=value.slice(0,-1);}else if(str&&!key?.ctrl&&!key?.meta&&!/[\x00-\x1f]/.test(str)){value+=str;}};process.stdin.on('keypress',handler);});}
+const local=process.argv.includes('--local');const target=path.join(root,'.secrets',local?'local.json':'cloudflare.json');
+console.log(local?'Đặt mật khẩu cho admin local.':'Chuẩn bị Secrets cho Cloudflare. Không gửi các giá trị này vào chat.');
+const password=await hidden('Mật khẩu mới (ít nhất 20 ký tự, không hiện khi gõ): ');const again=await hidden('Nhập lại mật khẩu: ');if(password!==again)throw Error('Hai mật khẩu không khớp.');
+const pepper=random();const record=await makePasswordRecord(password,pepper);const data={PASSWORD_RECORD:record,AUTH_PEPPER:pepper};
+if(!local){const token=await hidden('GitHub fine-grained token (Contents: Read and write, chỉ repository này): ');if(!token||token.length<20)throw Error('Token chưa hợp lệ.');data.GITHUB_TOKEN=token;}
+fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,JSON.stringify(data,null,2),{mode:0o600});console.log('Đã lưu cấu hình trong .secrets/'+path.basename(target)+' (được gitignore).');

@@ -1,0 +1,10 @@
+{
+ "$schema":"./node_modules/wrangler/config-schema.json",
+ "name":"gio-portfolio-admin",
+ "main":"backend/worker.mjs",
+ "compatibility_date":"2026-09-12",
+ "workers_dev":true,
+ "assets":{"directory":"./backend/public","binding":"ASSETS","run_worker_first":true},
+ "vars":{"ADMIN_USERNAME":"admin","GITHUB_REPO":"GioOTrongMat/GioOTrongMat.github.io","GITHUB_BRANCH":"main"},
+ "d1_databases":[{"binding":"AUTH_DB","database_name":"gio-portfolio-auth","database_id":"216b7a13-60da-4b22-bfd2-6469a7c80485","migrations_dir":"backend/migrations"}]
+}
