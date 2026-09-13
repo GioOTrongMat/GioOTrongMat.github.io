@@ -18,13 +18,18 @@ async function portraitWebP(file){
  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.86));if(!blob)throw Error('Không thể xử lý thumbnail. Hãy thử ảnh JPG hoặc PNG khác.');
  const base=(file.name||'thumbnail').replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_-]+/g,'-').slice(0,70)||'thumbnail';return new File([blob],base+'-'+Date.now()+'.webp',{type:'image/webp'});
 }
+let portraitIntent=false;
+document.addEventListener('click',event=>{
+ const button=event.target.closest?.('button');if(!button||!/Chọn hình khác|Choose an image/i.test(button.textContent))return;
+ let node=button;for(let i=0;i<8&&node;i++,node=node.parentElement){if(/THUMBNAIL/i.test(node.textContent||'')){portraitIntent=true;break;}}
+},true);
 document.addEventListener('change',async event=>{
  const input=event.target;if(!(input instanceof HTMLInputElement)||input.type!=='file'||input.dataset.portraitReady)return;
- const field=input.closest('[class*="ControlContainer"], [class*="Field"]');if(!field||!/Thumbnail/i.test(field.textContent)||!input.files?.[0])return;
+ const field=input.closest('[class*="ControlContainer"], [class*="Field"]');if((!field||!/Thumbnail/i.test(field.textContent))&&!portraitIntent||!input.files?.[0])return;
  event.stopImmediatePropagation();input.disabled=true;
  try{const processed=await portraitWebP(input.files[0]),dt=new DataTransfer();dt.items.add(processed);input.files=dt.files;input.dataset.portraitReady='1';input.dispatchEvent(new Event('change',{bubbles:true}));delete input.dataset.portraitReady;}
  catch(e){input.value='';alert(e.message||'Không thể xử lý thumbnail. Vui lòng chọn ảnh khác.');}
- finally{input.disabled=false;}
+ finally{input.disabled=false;portraitIntent=false;}
 },true);
 async function editor(){
  if(started){panel.hidden=true;return;}
