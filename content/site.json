@@ -9,27 +9,32 @@
     "cta": "View All Works",
     "items": [
       {
+        "id": "rita-vo",
         "name": "Rita Võ",
-        "video": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view?usp=sharing",
-        "image": "https://drive.google.com/file/d/1jqBvADHJ-Iwgk8Lydcru80q_RLBzr3Ns/view?usp=sharing"
+        "image": "https://drive.google.com/file/d/1jqBvADHJ-Iwgk8Lydcru80q_RLBzr3Ns/view?usp=sharing",
+        "fullVideo": "",
+        "legacyPreview": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view?usp=sharing"
       },
       {
+        "id": "sprite",
         "name": "Sprite",
         "image": "/Sprite.png",
-        "video": "/Video1.mp4",
-        "link": "#contact"
+        "fullVideo": "",
+        "legacyPreview": "/Video1.mp4"
       },
       {
+        "id": "milo",
         "name": "Milo",
         "image": "/Milo.png",
-        "video": "/Video2.mp4",
-        "link": "#contact"
+        "fullVideo": "",
+        "legacyPreview": "/Video2.mp4"
       },
       {
+        "id": "rockstar",
         "name": "Rockstar",
         "image": "/Rockstar.png",
-        "video": "/Video3.mp4",
-        "link": "#contact"
+        "fullVideo": "",
+        "legacyPreview": "/Video3.mp4"
       }
     ]
   },
