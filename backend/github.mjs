@@ -1,16 +1,20 @@
 import {assert,HttpError,enc,readablePath,mediaPath} from './common.mjs';
 const b64=bytes=>{let s='';for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(s);};
 export class GitHubStore {
- constructor(env,fetcher=fetch){this.env=env;this.fetcher=fetcher;}
+ constructor(env,fetcher=(...args)=>fetch(...args)){this.env=env;this.fetcher=fetcher;}
  async api(path,method='GET',data){
   const r=await this.fetcher(`https://api.github.com/repos/${this.env.GITHUB_REPO}${path}`,{method,headers:{Authorization:`Bearer ${this.env.GITHUB_TOKEN}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'Gio-Portfolio-Admin','Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});
   if(!r.ok){if(r.status===409||r.status===422)throw new HttpError(409,'Repository vừa thay đổi. Tải lại nội dung trước khi lưu.');if(r.status===404)throw new HttpError(404,'Không tìm thấy file hoặc repository.');throw new HttpError(502,'Không kết nối được GitHub. Kiểm tra quyền và hạn dùng token.');}
   return r.status===204?null:r.json();
  }
  async snapshot(){
+  console.log('snapshot:start');
   const ref=await this.api('/git/ref/heads/'+encodeURIComponent(this.env.GITHUB_BRANCH));
+  console.log('ref:ok');
   const commit=await this.api('/git/commits/'+ref.object.sha);
+  console.log('commit:ok');
   const tree=await this.api('/git/trees/'+commit.tree.sha+'?recursive=1');assert(!tree.truncated,'Repository quá lớn để quản lý bằng cấu hình hiện tại.',413);
+  console.log('tree:ok');
   return {head:ref.object.sha,tree:commit.tree.sha,files:new Map(tree.tree.filter(f=>f.type==='blob').map(f=>[f.path,f]))};
  }
  async read(path,snapshot){

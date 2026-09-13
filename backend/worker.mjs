@@ -59,7 +59,7 @@ export function createWorker(factory=env=>new GitHubStore(env)){
     case 'getPRMetadata':return json({metadata:null});
     default:throw new HttpError(403,'Thao tác không được phép.');
    }
-  }catch(error){return json({error:error instanceof HttpError?error.message:'Không thể xử lý yêu cầu. Kiểm tra cấu hình backend.'},error instanceof HttpError?error.status:500);}
+  }catch(error){if(!(error instanceof HttpError))console.error('worker:exception',{name:error?.name,message:error?.message,stack:error?.stack});return json({error:error instanceof HttpError?error.message:'Không thể xử lý yêu cầu. Kiểm tra cấu hình backend.'},error instanceof HttpError?error.status:500);}
  }};
 }
 export default createWorker();
