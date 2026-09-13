@@ -18,6 +18,17 @@ async function portraitWebP(file){
  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.86));if(!blob)throw Error('Không thể xử lý thumbnail. Hãy thử ảnh JPG hoặc PNG khác.');
  const base=(file.name||'thumbnail').replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_-]+/g,'-').slice(0,70)||'thumbnail';return new File([blob],base+'-'+Date.now()+'.webp',{type:'image/webp'});
 }
+function bytesFromBase64(value){const raw=atob(value.replace(/^data:[^,]+,/,'')),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes;}
+function base64FromBytes(bytes){let out='';for(let i=0;i<bytes.length;i+=8192)out+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(out);}
+async function processWorkAssets(payload){
+ const p=payload.params||{},file=(p.dataFiles||[p.entry])[0];if(file?.path!=='content/site.json')return;
+ const data=JSON.parse(file.raw),assets=p.assets||[],items=data.works?.items||[];
+ for(const item of items){const wanted=(item.image||'').replace(/^\//,'');const asset=assets.find(x=>x.path===wanted);if(!asset||/\.webp$/i.test(asset.path))continue;
+  const ext=asset.path.split('.').pop().toLowerCase(),type=ext==='png'?'image/png':ext==='gif'?'image/gif':'image/jpeg',source=new File([bytesFromBase64(asset.content)],asset.path.split('/').pop(),{type}),processed=await portraitWebP(source),next='uploads/'+processed.name;
+  asset.path=next;asset.content=base64FromBytes(new Uint8Array(await processed.arrayBuffer()));asset.encoding='base64';item.image='/'+next;
+ }
+ file.raw=JSON.stringify(data,null,2)+'\n';
+}
 let portraitIntent=false;
 document.addEventListener('click',event=>{
  const button=event.target.closest?.('button');if(!button||!/Chọn hình khác|Choose an image/i.test(button.textContent))return;
@@ -43,7 +54,7 @@ async function editor(){
    backend.authenticate=backend.restoreUser=async()=>{auth=await api('/api/session');return {login:auth.username,name:auth.username};};
    backend.logout=()=>{endSession();};
    backend.request=async payload=>{
-    if(payload.action==='persistEntry'){const file=(payload.params?.dataFiles||[payload.params?.entry])[0];if(file?.path==='content/site.json')file.raw=normalizeWorks(file.raw);}
+    if(payload.action==='persistEntry'){await processWorkAssets(payload);const file=(payload.params?.dataFiles||[payload.params?.entry])[0];if(file?.path==='content/site.json')file.raw=normalizeWorks(file.raw);}
     const result=await api('/api/v1',{...payload,revision});
     if(payload.action==='getEntry')revision=result.file.id;
     if(payload.action==='entriesByFiles')revision=result.find(e=>e.file.path==='content/site.json')?.file.id||revision;
