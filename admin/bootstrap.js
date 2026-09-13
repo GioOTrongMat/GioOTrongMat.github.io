@@ -37,7 +37,9 @@ async function editor(){
 async function endSession(){if(!confirm('Đăng xuất? Hãy lưu nội dung đang chỉnh sửa trước.'))return;try{await api('/api/logout',{});location.reload();}catch(e){panel.hidden=false;tell(e.message,true);}}
 form.addEventListener('submit',async event=>{event.preventDefault();loginButton.disabled=true;tell('Đang đăng nhập…');try{auth=await api('/api/login',{username:form.username.value,password:form.password.value});form.password.value='';await editor();}catch(e){tell(e.message,true);}finally{loginButton.disabled=false;}});
 document.getElementById('logout').addEventListener('click',endSession);
-(async()=>{loginButton.disabled=true;try{auth=await api('/api/session');await editor();}catch(e){
+(async()=>{loginButton.disabled=true;try{
+ try{const c=await(await fetch('connection.json',{cache:'no-store'})).json();if(c.admin_url){const u=new URL(c.admin_url);if(u.protocol==='https:'&&u.hostname.endsWith('.workers.dev')&&u.origin!==location.origin){location.replace(u.href);return;}}}catch{}
+ auth=await api('/api/session');await editor();}catch(e){
  if(e.status===401){tell('');loginButton.disabled=false;}
  else if(e.status===404){
   try{const c=await(await fetch('connection.json')).json();if(c.admin_url){const u=new URL(c.admin_url);if(u.protocol==='https:'&&u.hostname.endsWith('.workers.dev')){location.replace(u.href);return;}}}catch{}
