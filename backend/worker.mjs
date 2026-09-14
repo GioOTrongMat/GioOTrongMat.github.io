@@ -8,7 +8,7 @@ async function previewResponse(request,env,key){
  assert(env.WORK_PREVIEWS,'Preview storage chưa được cấu hình.',503);assert(/^works\/[a-z0-9][a-z0-9-]{2,80}\.mp4$/.test(key),'Preview không hợp lệ.',404);
  const range=request.headers.get('range');let object,status=200;
  if(range){const m=/^bytes=(\d+)-(\d*)$/.exec(range);assert(m,'Range không hợp lệ.',416);const from=Number(m[1]),to=m[2]?Number(m[2]):undefined;object=await env.WORK_PREVIEWS.get(key,{range:{offset:from,length:to===undefined?undefined:to-from+1}});status=206;}else object=await env.WORK_PREVIEWS.get(key);
- assert(object,'Preview chưa sẵn sàng.',404);const headers=new Headers();object.writeHttpMetadata(headers);headers.set('Content-Type','video/mp4');headers.set('Accept-Ranges','bytes');headers.set('Cache-Control','public, max-age=3600, stale-while-revalidate=86400');headers.set('ETag',object.httpEtag);if(status===206){const off=object.range?.offset||0;headers.set('Content-Range',`bytes ${off}-${off+object.size-1}/${object.range?.length||object.size}`);}return new Response(object.body,{status,headers});
+ assert(object,'Preview chưa sẵn sàng.',404);const headers=new Headers();object.writeHttpMetadata(headers);headers.set('Content-Type','video/mp4');headers.set('Accept-Ranges','bytes');headers.set('Cache-Control','public, max-age=3600, stale-while-revalidate=86400');headers.set('ETag',object.httpEtag);if(status===206){const off=object.range?.offset||0,length=object.range?.length||object.size;headers.set('Content-Range',`bytes ${off}-${off+length-1}/${object.size}`);}return new Response(object.body,{status,headers});
 }
 export function createWorker(factory=env=>new GitHubStore(env)){
  return {async fetch(request,env){

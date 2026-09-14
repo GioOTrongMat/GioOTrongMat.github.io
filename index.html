@@ -574,6 +574,7 @@
     display: block;
     transition: opacity 0.4s ease;
     z-index: 2;
+    pointer-events: none;
   }
 
   /* Hover video — hidden by default, plays on hover */
@@ -587,11 +588,12 @@
     opacity: 0;
     transition: opacity 0.4s ease;
     z-index: 3;
+    pointer-events: none;
   }
 
-  /* When hovered: hide cover, show video */
-  .work-card:hover .work-card-cover { opacity: 0; }
-  .work-card:hover .work-card-video  { opacity: 1; }
+  /* Reveal media only after HTMLVideoElement.play() has actually started. */
+  .work-card.is-previewing .work-card-cover { opacity: 0; }
+  .work-card.is-previewing .work-card-video  { opacity: 1; }
 
   /* Link indicator on hover */
   /* Unmute button on work cards */
