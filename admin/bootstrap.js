@@ -40,7 +40,7 @@ async function processWorkAssets(payload){
 function persistMeta(payload){const assets=payload.params?.assets||[];return {action:payload.action,assetCount:assets.length,assets:assets.map(asset=>{const contentLength=typeof asset.content==='string'?asset.content.length:0;return {path:asset.path,contentLength,estimatedBytes:Math.floor(contentLength*3/4)};})};}
 let portraitIntent=false;
 document.addEventListener('click',event=>{
- const button=event.target.closest?.('button');if(!button||!/Chọn hình khác|Choose an image/i.test(button.textContent))return;
+ const button=event.target.closest?.('button');if(!button||!/Chọn hình khác|Chọn một hình|Choose an image/i.test(button.textContent))return;
  let node=button;for(let i=0;i<8&&node;i++,node=node.parentElement){if(/THUMBNAIL/i.test(node.textContent||'')){portraitIntent=true;break;}}
 },true);
 document.addEventListener('change',async event=>{
