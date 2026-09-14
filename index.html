@@ -803,6 +803,7 @@
   /* Outer container — zoom out on scroll */
   .slider-outer {
     position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -821,7 +822,7 @@
   .slider-btn {
     position: absolute;
     top: 50%; transform: translateY(-50%);
-    z-index: 10;
+    z-index: 30;
     width: 48px; height: 48px;
     border: 1px solid rgba(255,255,255,0.18);
     border-radius: 50%;
@@ -846,6 +847,8 @@
 
   /* Viewport — only shows one slide at a time, centered */
   .slider-wrap {
+    position: relative;
+    z-index: 1;
     overflow: hidden;
     width: 100%;
   }
