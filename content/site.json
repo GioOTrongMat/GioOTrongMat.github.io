@@ -35,6 +35,30 @@
         "image": "/Rockstar.png",
         "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
         "legacyPreview": "/Video3.mp4"
+      },
+      {
+        "name": "Publish Test JPG 20MB",
+        "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
+        "image": "/uploads/work-jpg-20mb-1789369776983-1789369836954.webp",
+        "id": "publish-test-jpg-20mb"
+      },
+      {
+        "name": "Publish Test PNG 15MB",
+        "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
+        "image": "/uploads/work-png-15mb-1789369789812-1789369837330.webp",
+        "id": "publish-test-png-15mb"
+      },
+      {
+        "name": "Publish Test WebP 8MB",
+        "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
+        "image": "/uploads/work-webp-8mb-1789369801221-1789369837716.webp",
+        "id": "publish-test-webp-8mb"
+      },
+      {
+        "name": "Publish Test JPG 1MB",
+        "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
+        "image": "/uploads/work-jpg-1mb-1789369812539-1789369838066.webp",
+        "id": "publish-test-jpg-1mb"
       }
     ]
   },
