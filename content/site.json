@@ -41,6 +41,12 @@
         "image": "/Rockstar.png",
         "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
         "legacyPreview": "/Video3.mp4"
+      },
+      {
+        "name": "Đan Viện Thánh Mẫu Châu Sơn",
+        "fullVideo": "https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/view",
+        "image": "/uploads/vlcsnap-2026-09-14-17h52m14s457-1789383159019-1789383163862.webp",
+        "id": "an-vien-thanh-mau-chau-son"
       }
     ]
   },
