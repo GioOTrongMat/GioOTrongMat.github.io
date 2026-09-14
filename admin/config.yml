@@ -186,6 +186,7 @@
                   "name": "items",
                   "label": "Danh sách dự án",
                   "widget": "list",
+                  "summary": "{{fields.name}}",
                   "fields": [
                     {
                       "name": "id",
