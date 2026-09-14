@@ -112,19 +112,19 @@
       {
         "name": "Đan Viện Thánh Mẫu Châu Sơn",
         "id": "project-1",
-        "image": "https://drive.google.com/file/d/191DpZ2L46nsOHsFh_G_ivIlx3SoCf2Fy/view",
+        "image": "/uploads/project-project-1-thumbnail.webp",
         "fullVideo": "https://drive.google.com/file/d/1Nl2tAMc27K56Ts1MDXedjz7Mg95wgnlH/view"
       },
       {
         "name": "Mùa Gặt",
         "id": "project-2",
-        "image": "https://drive.google.com/file/d/1PhxkkKPHWChhcnD5cFoz6Zz7C12ruzhd/view",
+        "image": "/uploads/project-project-2-thumbnail.webp",
         "fullVideo": "https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/view"
       },
       {
         "name": "THCS Lạc Xuân 2",
         "id": "project-3",
-        "image": "https://drive.google.com/file/d/1Yl_mmtYlmY8bp5vfD4ITpDBKULpEgZ4j/view?usp=sharing",
+        "image": "/uploads/project-project-3-thumbnail.webp",
         "fullVideo": "https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/view"
       }
     ]
