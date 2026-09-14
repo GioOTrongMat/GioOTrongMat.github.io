@@ -104,28 +104,22 @@
     "heading": "My Projects",
     "items": [
       {
-        "name": "Project 1",
+        "name": "Đan Viện Thánh Mẫu Châu Sơn",
         "id": "project-1",
-        "image": "",
+        "image": "https://drive.google.com/file/d/191DpZ2L46nsOHsFh_G_ivIlx3SoCf2Fy/view",
+        "fullVideo": "https://drive.google.com/file/d/1Nl2tAMc27K56Ts1MDXedjz7Mg95wgnlH/view"
+      },
+      {
+        "name": "Mùa Gặt",
+        "id": "project-2",
+        "image": "https://drive.google.com/file/d/1PhxkkKPHWChhcnD5cFoz6Zz7C12ruzhd/view",
         "fullVideo": "https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/view"
       },
       {
-        "name": "Project 2",
-        "id": "project-2",
-        "image": "",
-        "fullVideo": "https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/view"
-      },
-      {
-        "name": "Project 3",
+        "name": "THCS Lạc Xuân 2",
         "id": "project-3",
-        "image": "",
+        "image": "https://drive.google.com/file/d/1Yl_mmtYlmY8bp5vfD4ITpDBKULpEgZ4j/view?usp=sharing",
         "fullVideo": "https://drive.google.com/file/d/1-hLUupYNFO2F6dQ8xtnwmYWvbC-ZB4dA/view"
-      },
-      {
-        "name": "Production Project Test",
-        "fullVideo": "https://drive.google.com/file/d/1DzEL1v7GTh7LhNd_acPPBoVqk5bjFNHB/view",
-        "image": "/uploads/work-jpg-20mb-1789382216002.webp",
-        "id": "production-project-test"
       }
     ]
   },
