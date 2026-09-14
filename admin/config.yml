@@ -203,8 +203,9 @@
                       "name": "image",
                       "label": "Thumbnail",
                       "widget": "image",
+                      "choose_url": false,
                       "required": false,
-                      "hint": "Ảnh sẽ được crop giữa theo tỷ lệ 16:9 và lưu WebP khi Công bố."
+                      "hint": "Tải file ảnh lên. Ảnh sẽ được crop giữa theo tỷ lệ 16:9 và lưu WebP khi Công bố."
                     },
                     {
                       "name": "fullVideo",
