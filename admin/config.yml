@@ -188,23 +188,29 @@
                   "widget": "list",
                   "fields": [
                     {
+                      "name": "id",
+                      "label": "ID",
+                      "widget": "hidden",
+                      "required": false
+                    },
+                    {
                       "name": "name",
                       "label": "Tên",
                       "widget": "string"
                     },
                     {
-                      "name": "url",
-                      "label": "Link YouTube hoặc Google Drive",
-                      "widget": "string"
+                      "name": "image",
+                      "label": "Thumbnail",
+                      "widget": "image",
+                      "required": false,
+                      "hint": "Ảnh sẽ được crop giữa theo tỷ lệ 16:9 và lưu WebP khi Công bố."
                     },
                     {
-                      "name": "ratio",
-                      "label": "Tỷ lệ",
-                      "widget": "select",
-                      "options": [
-                        "16:9",
-                        "9:16"
-                      ]
+                      "name": "fullVideo",
+                      "label": "Video full Google Drive",
+                      "widget": "string",
+                      "required": false,
+                      "hint": "Dán link Google Drive của video đầy đủ."
                     }
                   ],
                   "required": false,

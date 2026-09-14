@@ -13,41 +13,42 @@ async function api(path,body,requestMeta){
 }
 function script(src){return new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error('Không tải được trình biên tập. Hãy tải lại trang.'));document.head.append(el);});}
 function slug(value){return (value||'work').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,64)||'work';}
-function normalizeWorks(raw){
- const data=JSON.parse(raw),seen=new Set();for(const item of data.works?.items||[]){let id=item.id||slug(item.name),n=2;while(seen.has(id))id=slug(item.name)+'-'+n++;item.id=id;seen.add(id);}return JSON.stringify(data,null,2)+'\n';
+function normalizeIds(raw){
+ const data=JSON.parse(raw);for(const group of [data.works?.items||[],data.projects?.items||[]]){const seen=new Set();for(const item of group){let id=item.id||slug(item.name),n=2;while(seen.has(id))id=slug(item.name)+'-'+n++;item.id=id;seen.add(id);}}return JSON.stringify(data,null,2)+'\n';
 }
-async function portraitWebP(file){
+async function processThumbnail(file,{width,height}){
  if(!file?.type?.startsWith('image/'))throw Error('Thumbnail phải là file ảnh.');
- const bitmap=await createImageBitmap(file),canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;const ctx=canvas.getContext('2d',{alpha:false});const scale=Math.max(1080/bitmap.width,1920/bitmap.height),w=bitmap.width*scale,h=bitmap.height*scale;ctx.drawImage(bitmap,(1080-w)/2,(1920-h)/2,w,h);bitmap.close();
+ const bitmap=await createImageBitmap(file),canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d',{alpha:false});const scale=Math.max(width/bitmap.width,height/bitmap.height),w=bitmap.width*scale,h=bitmap.height*scale;ctx.drawImage(bitmap,(width-w)/2,(height-h)/2,w,h);bitmap.close();
  let blob;for(const quality of [.82,.72,.62,.52,.42]){blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));if(blob&&blob.size<5*1024*1024)break;}if(!blob||blob.size>=5*1024*1024)throw Error('Thumbnail sau xử lý vẫn lớn hơn 5 MB. Hãy chọn ảnh ít chi tiết hơn.');
  const base=(file.name||'thumbnail').replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_-]+/g,'-').slice(0,70)||'thumbnail';return new File([blob],base+'-'+Date.now()+'.webp',{type:'image/webp'});
 }
 function bytesFromBase64(value){const raw=atob(value.replace(/^data:[^,]+,/,'')),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes;}
 function base64FromBytes(bytes){let out='';for(let i=0;i<bytes.length;i+=8192)out+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(out);}
-async function processWorkAssets(payload){
+async function processEntryAssets(payload){
  const p=payload.params||{},file=(p.dataFiles||[p.entry])[0];if(file?.path!=='content/site.json')return;
- const data=JSON.parse(file.raw),assets=p.assets||[],items=data.works?.items||[];
+ const data=JSON.parse(file.raw),assets=p.assets||[];
  const clean=value=>{if(typeof value!=='string')return '';try{value=decodeURIComponent(value);}catch{}try{const u=new URL(value,location.origin);if(u.origin===location.origin)value=u.pathname;}catch{}return value.replace(/^\/+/, '').replace(/^\.\//,'');};
  const byPath=new Map(),byName=new Map();for(const asset of assets){const path=clean(asset.path),name=path.split('/').pop();if(path)byPath.set(path,asset);if(name)byName.set(name,[...(byName.get(name)||[]),asset]);}
- for(const item of items){const wanted=clean(item.image),name=wanted.split('/').pop();let asset=byPath.get(wanted);if(!asset&&name&&byName.get(name)?.length===1)asset=byName.get(name)[0];if(!asset)continue;
-  if(!/\.(png|jpe?g|gif|webp)$/i.test(asset.path||''))throw Error(`Thumbnail của ${item.name||'Work mới'} không phải file ảnh.`);
-  const ext=asset.path.split('.').pop().toLowerCase(),type=ext==='png'?'image/png':ext==='gif'?'image/gif':ext==='webp'?'image/webp':'image/jpeg',sourceBytes=bytesFromBase64(asset.content),source=new File([sourceBytes],asset.path.split('/').pop(),{type}),processed=await portraitWebP(source),next='uploads/'+processed.name;
+ const processItems=async(items,dimensions,kind)=>{for(const item of items){const wanted=clean(item.image),name=wanted.split('/').pop();let asset=byPath.get(wanted);if(!asset&&name&&byName.get(name)?.length===1)asset=byName.get(name)[0];if(!asset)continue;
+  if(!/\.(png|jpe?g|gif|webp)$/i.test(asset.path||''))throw Error(`Thumbnail của ${item.name||'mục mới'} không phải file ảnh.`);
+  const ext=asset.path.split('.').pop().toLowerCase(),type=ext==='png'?'image/png':ext==='gif'?'image/gif':ext==='webp'?'image/webp':'image/jpeg',sourceBytes=bytesFromBase64(asset.content),source=new File([sourceBytes],asset.path.split('/').pop(),{type}),processed=await processThumbnail(source,dimensions),next='uploads/'+processed.name;
   asset.path=next;asset.content=base64FromBytes(new Uint8Array(await processed.arrayBuffer()));asset.encoding='base64';item.image='/'+next;
-  console.info('admin:thumbnail',{work:item.name||'',inputBytes:sourceBytes.length,outputBytes:processed.size,width:1080,height:1920,path:'/'+next});
- }
+  console.info('admin:thumbnail',{kind,name:item.name||'',inputBytes:sourceBytes.length,outputBytes:processed.size,width:dimensions.width,height:dimensions.height,path:'/'+next});
+ }};
+ await processItems(data.works?.items||[],{width:1080,height:1920},'work');await processItems(data.projects?.items||[],{width:1920,height:1080},'project');
  file.raw=JSON.stringify(data,null,2)+'\n';
 }
 function persistMeta(payload){const assets=payload.params?.assets||[];return {action:payload.action,assetCount:assets.length,assets:assets.map(asset=>{const contentLength=typeof asset.content==='string'?asset.content.length:0;return {path:asset.path,contentLength,estimatedBytes:Math.floor(contentLength*3/4)};})};}
 let portraitIntent=false;
 document.addEventListener('click',event=>{
  const button=event.target.closest?.('button');if(!button||!/Chọn hình khác|Chọn một hình|Choose an image/i.test(button.textContent))return;
- let node=button;for(let i=0;i<8&&node;i++,node=node.parentElement){if(/THUMBNAIL/i.test(node.textContent||'')){portraitIntent=true;break;}}
+ let node=button;for(let i=0;i<14&&node;i++,node=node.parentElement){const text=node.textContent||'';if(/DANH SÁCH DỰ ÁN/i.test(text)){portraitIntent=false;break;}if(/DANH SÁCH TÁC PHẨM/i.test(text)){portraitIntent=true;break;}}
 },true);
 document.addEventListener('change',async event=>{
  const input=event.target;if(!(input instanceof HTMLInputElement)||input.type!=='file'||input.dataset.portraitReady)return;
  const field=input.closest('[class*="ControlContainer"], [class*="Field"]');if((!field||!/Thumbnail/i.test(field.textContent))&&!portraitIntent||!input.files?.[0])return;
  event.stopImmediatePropagation();input.disabled=true;
- try{const processed=await portraitWebP(input.files[0]),dt=new DataTransfer();dt.items.add(processed);input.files=dt.files;input.dataset.portraitReady='1';input.dispatchEvent(new Event('change',{bubbles:true}));delete input.dataset.portraitReady;}
+ try{const processed=await processThumbnail(input.files[0],{width:1080,height:1920}),dt=new DataTransfer();dt.items.add(processed);input.files=dt.files;input.dataset.portraitReady='1';input.dispatchEvent(new Event('change',{bubbles:true}));delete input.dataset.portraitReady;}
  catch(e){input.value='';alert(e.message||'Không thể xử lý thumbnail. Vui lòng chọn ảnh khác.');}
  finally{input.disabled=false;portraitIntent=false;}
 },true);
@@ -63,7 +64,7 @@ async function editor(){
    backend.authenticate=backend.restoreUser=async()=>{auth=await api('/api/session');return {login:auth.username,name:auth.username};};
    backend.logout=()=>{endSession();};
    backend.request=async payload=>{
-    if(payload.action==='persistEntry'){await processWorkAssets(payload);const file=(payload.params?.dataFiles||[payload.params?.entry])[0];if(file?.path==='content/site.json')file.raw=normalizeWorks(file.raw);}
+    if(payload.action==='persistEntry'){await processEntryAssets(payload);const file=(payload.params?.dataFiles||[payload.params?.entry])[0];if(file?.path==='content/site.json')file.raw=normalizeIds(file.raw);}
     const body={...payload,revision},meta=payload.action==='persistEntry'?persistMeta(payload):undefined;const result=await api('/api/v1',body,meta);
     if(payload.action==='getEntry')revision=result.file.id;
     if(payload.action==='entriesByFiles')revision=result.find(e=>e.file.path==='content/site.json')?.file.id||revision;
