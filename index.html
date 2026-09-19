@@ -130,32 +130,6 @@
   }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Unmute button */
-  #unmuteBtn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink);
-    background: rgba(245,240,232,0.92);
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 100px;
-    cursor: pointer;
-    transition: opacity 0.3s, background 0.3s, transform 0.3s;
-    backdrop-filter: blur(4px);
-  }
-
-  #unmuteBtn:hover {
-    background: var(--gold);
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-
   /* Overlay — normal dark, lighter when unmuted */
   .hero-overlay {
     transition: background 0.8s ease;
@@ -195,7 +169,7 @@
     height: max(100%, 56.25vw);
     min-width: 100%;
     min-height: 100%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1.12);
     border: 0;
     pointer-events: none;
   }
@@ -208,6 +182,38 @@
     object-fit: cover;
     object-position: center;
     display: block;
+  }
+
+  .hero-welcome-popup {
+    position: absolute;
+    top: 56px;
+    left: 120px;
+    width: clamp(140px, 19vw, 290px);
+    aspect-ratio: 969 / 643;
+    overflow: hidden;
+    z-index: 101;
+    pointer-events: none;
+    animation: welcome-float 3.4s ease-in-out infinite;
+  }
+  .hero-welcome-popup[hidden] { display: none; }
+  .hero-welcome-popup img {
+    position: absolute;
+    width: 111.5%;
+    max-width: none;
+    left: -5.6%;
+    top: -34.4%;
+    height: auto;
+    display: block;
+  }
+  @keyframes welcome-float {
+    0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+    50% { transform: translateY(-3px) rotate(0.5deg); }
+  }
+  @media (max-width: 768px) {
+    .hero-welcome-popup { top: 62px; left: clamp(96px, 26vw, 130px); width: clamp(140px, 34vw, 190px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-welcome-popup { animation: none; }
   }
 
   /* Placeholder when no video */
@@ -1525,19 +1531,19 @@
 
 <!-- HERO -->
 <section id="hero">
+  <div class="hero-welcome-popup" id="heroWelcomePopup" aria-hidden="true">
+    <img src="assets/welcome-popup.png" alt="" width="1081" height="1081">
+  </div>
   <!-- Fixed video bg fullscreen -->
   <div class="hero-video-wrap">
     <iframe id="heroYT"
-      src="https://www.youtube.com/embed/e45dsJIzdSs?autoplay=1&mute=1&loop=1&playlist=e45dsJIzdSs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+      src="https://www.youtube.com/embed/e45dsJIzdSs?autoplay=1&mute=1&loop=1&playlist=e45dsJIzdSs&controls=0&showinfo=0&rel=0&modestbranding=1&fs=0&disablekb=1&iv_load_policy=3&playsinline=1&enablejsapi=1"
       style="border:0;pointer-events:none;"
       allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 
   <!-- Cinematic overlay — dims on mute, brightens on unmute -->
   <div class="hero-overlay" id="heroOverlay"></div>
-
-  <!-- Unmute button -->
-  <button id="unmuteBtn" onclick="toggleMute()">Unmute</button>
 
   <!-- Content — bottom left -->
   <div class="hero-content">
@@ -1560,6 +1566,21 @@
     <div class="scroll-line"></div>
   </div>
 </section>
+
+<script>
+// The welcome prompt disappears on the first interaction, even before content finishes loading.
+(() => {
+  const popup = document.getElementById('heroWelcomePopup');
+  const dismiss = () => { popup.hidden = true; };
+  for (const type of ['pointerdown', 'click', 'touchstart', 'keydown', 'wheel']) {
+    document.addEventListener(type, dismiss, { once: true, passive: true, capture: true });
+  }
+  const initialScroll = window.scrollY;
+  document.addEventListener('scroll', () => {
+    if (Math.abs(window.scrollY - initialScroll) > 2) dismiss();
+  }, { passive: true });
+})();
+</script>
 
 <!-- MARQUEE -->
 <div class="marquee-wrap">
@@ -1787,37 +1808,87 @@
 <script>
 window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => {
   // YouTube iframe API
-  var ytPlayer;
-  var isMuted = true;
+  let ytPlayer;
+  let heroReady = false;
+  let audioUnlocked = false;
+  let visibilityRatio = 1;
+  let fadeStartedAt = 0;
+  let volumeFrame = 0;
+  let appliedVolume = 0;
+  const heroEl = document.getElementById('hero');
+  const heroVid = document.querySelector('.hero-video-wrap');
+  const heroState = { get ready() { return heroReady; }, get audioUnlocked() { return audioUnlocked; }, get visibilityRatio() { return visibilityRatio; }, get volume() { return appliedVolume; } };
+  window.heroVideoState = heroState;
+
+  const setHeroVolume = value => {
+    if (!heroReady) return;
+    appliedVolume = Math.max(0, Math.min(50, value));
+    heroEl.dataset.heroVolume = String(Math.round(appliedVolume));
+    ytPlayer.setVolume(Math.round(appliedVolume));
+  };
+  const targetVolume = now => {
+    const fade = Math.min(50, Math.max(0, (now - fadeStartedAt) / 5000 * 50));
+    return Math.min(fade, 50 * visibilityRatio);
+  };
+  const updateVolume = now => {
+    volumeFrame = 0;
+    if (!heroReady || !audioUnlocked || visibilityRatio <= 0) return;
+    const target = targetVolume(now);
+    const next = appliedVolume + (target - appliedVolume) * .22;
+    setHeroVolume(Math.abs(target - next) < .3 ? target : next);
+    if (Math.abs(target - appliedVolume) > .3 || targetVolume(now + 20) > target + .1) {
+      volumeFrame = requestAnimationFrame(updateVolume);
+    }
+  };
+  const scheduleVolume = () => { if (!volumeFrame) volumeFrame = requestAnimationFrame(updateVolume); };
+  const playHero = () => {
+    if (!heroReady || visibilityRatio <= 0) return;
+    ytPlayer.playVideo();
+    if (audioUnlocked) { ytPlayer.unMute(); scheduleVolume(); }
+    else { ytPlayer.mute(); setHeroVolume(0); }
+  };
+  const unlockHero = () => {
+    if (!heroReady || audioUnlocked || visibilityRatio <= 0) return;
+    ytPlayer.setVolume(0);
+    ytPlayer.unMute();
+    ytPlayer.playVideo();
+    audioUnlocked = true;
+    fadeStartedAt = performance.now();
+    heroEl.dataset.heroAudioUnlocked = 'true';
+    scheduleVolume();
+    setTimeout(() => {
+      if (!heroReady || !audioUnlocked || visibilityRatio <= 0) return;
+      const playback = ytPlayer.getPlayerState();
+      if (ytPlayer.isMuted() || (playback !== YT.PlayerState.PLAYING && playback !== YT.PlayerState.BUFFERING)) {
+        audioUnlocked = false;
+        heroEl.dataset.heroAudioUnlocked = 'false';
+        cancelAnimationFrame(volumeFrame);
+        volumeFrame = 0;
+        setHeroVolume(0);
+        ytPlayer.mute();
+        ytPlayer.playVideo();
+      }
+    }, 900);
+  };
+  for (const type of ['pointerdown', 'keydown']) {
+    document.addEventListener(type, unlockHero, { passive: true, capture: true });
+  }
+  // click also covers keyboard-activated controls; touchstart covers older touch browsers.
+  document.addEventListener('click', unlockHero, { passive: true, capture: true });
+  document.addEventListener('touchstart', unlockHero, { passive: true, capture: true });
 
   window.onYouTubeIframeAPIReady = function() {
     ytPlayer = new YT.Player('heroYT', {
-      events: { 'onReady': function(e) { e.target.playVideo(); } }
+      events: { 'onReady': function(e) {
+        heroReady = true;
+        e.target.mute();
+        e.target.setVolume(0);
+        playHero();
+      } }
     });
     window.onQuoteYouTubeAPIReady?.();
   };
 
-  function toggleMute() {
-    const btn = document.getElementById('unmuteBtn');
-    const overlay = document.getElementById('heroOverlay');
-    if (!ytPlayer) return;
-    if (isMuted) {
-      ytPlayer.unMute();
-      ytPlayer.setVolume(80);
-      btn.dataset.muted = 'false';
-      btn.textContent = window.portfolioI18n?.t('ui.mute') || 'Mute';
-      overlay.classList.add('unmuted');
-      isMuted = false;
-    } else {
-      ytPlayer.mute();
-      btn.dataset.muted = 'true';
-      btn.textContent = window.portfolioI18n?.t('ui.unmute') || 'Unmute';
-      overlay.classList.remove('unmuted');
-      isMuted = true;
-    }
-  }
-
-  window.toggleMute = toggleMute;
   const ytScript = document.createElement('script');
   ytScript.src = 'https://www.youtube.com/iframe_api';
   document.head.append(ytScript);
@@ -2040,14 +2111,22 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
     sliderScrollObs.observe(sliderOuter);
   }
 
-  // Hide fixed video bg when scrolled past hero
-  const heroEl = document.getElementById('hero');
-  const heroVid = document.querySelector('.hero-video-wrap');
+  // Track the visible part of the hero so sound follows the viewport.
   const heroObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (heroVid) heroVid.style.visibility = e.isIntersecting ? 'visible' : 'hidden';
+      visibilityRatio = e.isIntersecting ? e.intersectionRatio : 0;
+      heroEl.dataset.heroVisibility = visibilityRatio.toFixed(2);
+      if (heroVid) heroVid.style.visibility = visibilityRatio > 0 ? 'visible' : 'hidden';
+      if (visibilityRatio <= 0) {
+        cancelAnimationFrame(volumeFrame);
+        volumeFrame = 0;
+        setHeroVolume(0);
+        if (heroReady) { ytPlayer.mute(); ytPlayer.pauseVideo(); }
+      } else {
+        playHero();
+      }
     });
-  }, { threshold: 0 });
+  }, { threshold: Array.from({ length: 101 }, (_, i) => i / 100) });
   if (heroEl) heroObs.observe(heroEl);
 
 }); });
