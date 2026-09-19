@@ -58,7 +58,7 @@
     player.playVideo();
     soundOn = true;
     updateSound();
-    fadeTo(hover && fineHover.matches ? 100 : 20);
+    fadeTo(hover && fineHover.matches && innerWidth > 767 ? 100 : 20);
     // Some browsers reject audible playback despite a previous interaction.
     setTimeout(() => {
       if (!ready || !inView || !soundOn) return;
@@ -86,11 +86,11 @@
 
   wrap.addEventListener('mouseenter', () => {
     hover = true;
-    if (fineHover.matches && soundOn) fadeTo(100);
+    if (fineHover.matches && innerWidth > 767 && soundOn) fadeTo(100);
   });
   wrap.addEventListener('mouseleave', () => {
     hover = false;
-    if (fineHover.matches && soundOn) fadeTo(20);
+    if (fineHover.matches && innerWidth > 767 && soundOn) fadeTo(20);
   });
 
   window.onQuoteYouTubeAPIReady = () => {
