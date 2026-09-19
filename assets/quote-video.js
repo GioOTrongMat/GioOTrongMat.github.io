@@ -96,7 +96,7 @@
   window.onQuoteYouTubeAPIReady = () => {
     player = new YT.Player('quoteYT', {
       videoId: 'MrP9BZlo0WI',
-      playerVars: { autoplay: 0, controls: 0, playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: 'MrP9BZlo0WI' },
+      playerVars: { autoplay: 0, controls: 0, showinfo: 0, playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: 'MrP9BZlo0WI' },
       events: {
         onReady() {
           ready = true;
@@ -128,6 +128,7 @@
         section.classList.add('reveal');
         if (ready) audioUnlocked ? enableSound() : startMuted();
       } else {
+        section.classList.remove('reveal');
         cancelAnimationFrame(volumeFrame);
         player?.pauseVideo();
         silence();
