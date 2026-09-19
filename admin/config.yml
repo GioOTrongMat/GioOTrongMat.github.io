@@ -65,11 +65,19 @@
                   "name": "subtitle",
                   "label": "Mô tả",
                   "widget": "string"
-                },
+                }
+              ]
+            },
+            {
+              "name": "quote",
+              "label": "Video Quote",
+              "widget": "object",
+              "fields": [
                 {
                   "name": "youtube",
-                  "label": "Link YouTube",
-                  "widget": "string"
+                  "label": "Link YouTube cho Quote",
+                  "widget": "string",
+                  "hint": "Chỉ thay video cạnh trích dẫn Albert Einstein; không thay video mở đầu."
                 }
               ]
             },

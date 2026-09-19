@@ -12,6 +12,18 @@
   let hover = false;
   let volumeFrame = 0;
   let volume = 0;
+  let videoId = 'MrP9BZlo0WI';
+  const youtubeId = value => {
+    try {
+      const url = new URL(value);
+      if (url.protocol !== 'https:') return '';
+      const host = url.hostname.toLowerCase();
+      const id = host === 'youtu.be' ? url.pathname.slice(1) :
+        ['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(host) ?
+          url.searchParams.get('v') || url.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1] : '';
+      return /^[\w-]{11}$/.test(id || '') ? id : '';
+    } catch { return ''; }
+  };
   const fineHover = matchMedia('(hover: hover) and (pointer: fine)');
   const state = { get ready() { return ready; }, get inView() { return inView; }, get audioUnlocked() { return audioUnlocked; }, get soundOn() { return soundOn; }, get volume() { return volume; } };
   window.quoteVideoState = state;
@@ -94,9 +106,10 @@
   });
 
   window.onQuoteYouTubeAPIReady = () => {
+    if (player || !window.portfolioContent) return;
     player = new YT.Player('quoteYT', {
-      videoId: 'MrP9BZlo0WI',
-      playerVars: { autoplay: 0, controls: 0, showinfo: 0, playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: 'MrP9BZlo0WI' },
+      videoId,
+      playerVars: { autoplay: 0, controls: 0, showinfo: 0, playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: videoId },
       events: {
         onReady() {
           ready = true;
@@ -115,7 +128,11 @@
       }
     });
   };
-  if (window.YT?.Player) window.onQuoteYouTubeAPIReady();
+  window.siteReady?.then(() => {
+    videoId = youtubeId(window.portfolioContent?.quote?.youtube) || videoId;
+    section.dataset.quoteVideoId = videoId;
+    if (window.YT?.Player) window.onQuoteYouTubeAPIReady();
+  });
 
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
