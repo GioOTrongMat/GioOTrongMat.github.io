@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script defer src="assets/content.js?v=4"></script>
 <script defer src="assets/i18n.js?v=1"></script>
+<script defer src="assets/quote-video.js?v=1"></script>
 <style>
   @font-face {
     font-family: 'Ameyallinda';
@@ -1488,7 +1489,7 @@
     .instructor-img-placeholder img { max-width: 80%; margin: 0 auto; }
   }
 </style>
-<link rel="stylesheet" href="assets/content.css?v=5">
+<link rel="stylesheet" href="assets/content.css?v=6">
 </head>
 <body>
 
@@ -1617,10 +1618,19 @@
     </div>
   </div>
 
-  <!-- Quote — from bottom -->
+  <!-- Quote and film -->
   <div class="instructor-quote-wrap" id="ins-quote">
-    <p class="instructor-quote">Logic will get you from A to B.<br>Imagination will take you everywhere</p>
-    <p style="text-align:center;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;color:var(--mist);margin-top:1.2rem;">— Albert Einstein —</p>
+    <div class="quote-copy">
+      <p class="instructor-quote">Logic will get you from A to B.<br>Imagination will take you everywhere</p>
+      <p class="quote-author">— Albert Einstein —</p>
+    </div>
+    <div class="quote-video-wrap">
+      <div class="quote-video" id="quoteYT" aria-label="Quote section video"></div>
+      <button class="quote-video-sound" type="button" aria-label="Bật âm thanh video" aria-pressed="false" data-muted="true">
+        <svg class="sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3m13-1 5 8m0-8-5 8"/></svg>
+        <svg class="sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3m12-1a5 5 0 0 1 0 8m3-11a9 9 0 0 1 0 14"/></svg>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -1779,6 +1789,7 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
     ytPlayer = new YT.Player('heroYT', {
       events: { 'onReady': function(e) { e.target.playVideo(); } }
     });
+    window.onQuoteYouTubeAPIReady?.();
   };
 
   function toggleMute() {
@@ -1856,8 +1867,7 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
   // Instructor section — reveal on scroll down, hide only when section exits upward
   const insImg   = document.getElementById('ins-img');
   const insText  = document.getElementById('ins-text');
-  const insQuote = document.getElementById('ins-quote');
-  const insEls   = [insImg, insText, insQuote];
+  const insEls   = [insImg, insText];
 
   const insObs = new IntersectionObserver(entries => {
     entries.forEach(e => {

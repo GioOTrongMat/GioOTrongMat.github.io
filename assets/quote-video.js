@@ -1,0 +1,139 @@
+(() => {
+  const section = document.getElementById('ins-quote');
+  const wrap = section?.querySelector('.quote-video-wrap');
+  const sound = section?.querySelector('.quote-video-sound');
+  if (!section || !wrap || !sound) return;
+
+  let player = null;
+  let ready = false;
+  let inView = false;
+  let audioUnlocked = false;
+  let soundOn = false;
+  let hover = false;
+  let volumeFrame = 0;
+  let volume = 0;
+  const fineHover = matchMedia('(hover: hover) and (pointer: fine)');
+  const state = { get ready() { return ready; }, get inView() { return inView; }, get audioUnlocked() { return audioUnlocked; }, get soundOn() { return soundOn; }, get volume() { return volume; } };
+  window.quoteVideoState = state;
+
+  const setVolume = value => {
+    volume = Math.max(0, Math.min(100, value));
+    section.dataset.quoteVolume = String(Math.round(volume));
+    if (ready) player.setVolume(Math.round(volume));
+  };
+  const fadeTo = target => {
+    cancelAnimationFrame(volumeFrame);
+    if (!ready) return;
+    const start = volume;
+    const begin = performance.now();
+    const step = now => {
+      const progress = Math.min(1, (now - begin) / 550);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      setVolume(start + (target - start) * ease);
+      if (progress < 1) volumeFrame = requestAnimationFrame(step);
+    };
+    volumeFrame = requestAnimationFrame(step);
+  };
+  const updateSound = () => {
+    sound.dataset.muted = String(!soundOn);
+    section.dataset.quoteAudioUnlocked = String(audioUnlocked);
+    sound.setAttribute('aria-pressed', String(soundOn));
+    sound.setAttribute('aria-label', soundOn ? 'Tắt âm thanh video' : 'Bật âm thanh video');
+  };
+  const silence = () => {
+    cancelAnimationFrame(volumeFrame);
+    setVolume(0);
+    player?.mute();
+    soundOn = false;
+    updateSound();
+  };
+  const startMuted = () => {
+    if (!ready || !inView) return;
+    silence();
+    player.playVideo();
+  };
+  const enableSound = () => {
+    if (!ready || !inView || !audioUnlocked) return;
+    player.unMute();
+    player.playVideo();
+    soundOn = true;
+    updateSound();
+    fadeTo(hover && fineHover.matches ? 100 : 20);
+    // Some browsers reject audible playback despite a previous interaction.
+    setTimeout(() => {
+      if (!ready || !inView || !soundOn) return;
+      const playback = player.getPlayerState();
+      const blocked = player.isMuted() || (playback !== YT.PlayerState.PLAYING && playback !== YT.PlayerState.BUFFERING);
+      if (blocked) startMuted();
+    }, 900);
+  };
+
+  sound.addEventListener('click', () => {
+    audioUnlocked = true;
+    section.dataset.quoteAudioUnlocked = 'true';
+    if (soundOn) silence();
+    else enableSound();
+  });
+  for (const type of ['pointerdown', 'keydown']) {
+    document.addEventListener(type, event => {
+      if (event.target.closest?.('.quote-video-sound')) return;
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+      section.dataset.quoteAudioUnlocked = 'true';
+      if (inView) enableSound();
+    }, { passive: true });
+  }
+
+  wrap.addEventListener('mouseenter', () => {
+    hover = true;
+    if (fineHover.matches && soundOn) fadeTo(100);
+  });
+  wrap.addEventListener('mouseleave', () => {
+    hover = false;
+    if (fineHover.matches && soundOn) fadeTo(20);
+  });
+
+  window.onQuoteYouTubeAPIReady = () => {
+    player = new YT.Player('quoteYT', {
+      videoId: 'MrP9BZlo0WI',
+      playerVars: { autoplay: 0, controls: 0, playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: 'MrP9BZlo0WI' },
+      events: {
+        onReady() {
+          ready = true;
+          section.dataset.quoteReady = 'true';
+          silence();
+          if (inView) audioUnlocked ? enableSound() : startMuted();
+        },
+        onStateChange(event) {
+          section.dataset.quotePlayerState = String(event.data);
+          if (!inView && event.data === YT.PlayerState.PLAYING) {
+            player.pauseVideo();
+            silence();
+          }
+        },
+        onError() { silence(); }
+      }
+    });
+  };
+  if (window.YT?.Player) window.onQuoteYouTubeAPIReady();
+
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.target !== section) continue;
+      const visible = entry.isIntersecting && entry.intersectionRatio >= .25;
+      if (visible === inView) continue;
+      inView = visible;
+      section.dataset.inView = String(visible);
+      if (visible) {
+        section.classList.add('reveal');
+        if (ready) audioUnlocked ? enableSound() : startMuted();
+      } else {
+        cancelAnimationFrame(volumeFrame);
+        player?.pauseVideo();
+        silence();
+      }
+    }
+  }, { threshold: [0, .25] });
+  observer.observe(section);
+  updateSound();
+})();
