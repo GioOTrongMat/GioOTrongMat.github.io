@@ -170,32 +170,35 @@
   /* ── HERO ── */
   #hero {
     position: relative;
+    width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
     padding: 0 0 10vh 10vw;
   }
 
-  /* Fixed video background — cinema feel */
+  /* Cover the hero viewport without letterboxing the YouTube frame. */
   .hero-video-wrap {
-    position: fixed;
+    position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: 0;
+    overflow: hidden;
   }
 
-  /* Letterbox bars — cinema aspect */
-  .hero-video-wrap::before,
-  .hero-video-wrap::after {
-    content: '';
+  .hero-video-wrap iframe {
     position: absolute;
-    left: 0; right: 0;
-    height: 8vh;
-    background: var(--ink);
-    z-index: 2;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 177.7778dvh);
+    height: max(100%, 56.25vw);
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    border: 0;
+    pointer-events: none;
   }
-  .hero-video-wrap::before { top: 0; }
-  .hero-video-wrap::after  { bottom: 0; }
 
   .hero-video-wrap video {
     position: absolute;
@@ -1526,7 +1529,7 @@
   <div class="hero-video-wrap">
     <iframe id="heroYT"
       src="https://www.youtube.com/embed/e45dsJIzdSs?autoplay=1&mute=1&loop=1&playlist=e45dsJIzdSs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-      style="position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none;"
+      style="border:0;pointer-events:none;"
       allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 
