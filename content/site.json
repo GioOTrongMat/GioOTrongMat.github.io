@@ -12,7 +12,7 @@
         "id": "rita-vo",
         "name": "Rita Võ one-shot",
         "image": "https://drive.google.com/file/d/1jqBvADHJ-Iwgk8Lydcru80q_RLBzr3Ns/view?usp=sharing",
-        "fullVideo": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view",
+        "fullVideo": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view?usp=sharing",
         "legacyPreview": "https://drive.google.com/file/d/1ulR0a7diz920Q8ve7vBgZ5OCONyanHaG/view?usp=sharing"
       },
       {
@@ -121,7 +121,8 @@
         "text": "Creator."
       }
     ],
-    "subtitle": "FPV Pilot · Filmmaker · Content Creator"
+    "subtitle": "FPV Pilot · Filmmaker · Content Creator",
+    "youtube": "https://www.youtube.com/watch?v=e45dsJIzdSs"
   },
   "quote": {
     "youtube": "https://youtu.be/MrP9BZlo0WI"
