@@ -1811,6 +1811,7 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
   let ytPlayer;
   let heroReady = false;
   let audioUnlocked = false;
+  let pendingUnlock = false;
   let visibilityRatio = 1;
   let fadeStartedAt = 0;
   let volumeFrame = 0;
@@ -1848,7 +1849,9 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
     else { ytPlayer.mute(); setHeroVolume(0); }
   };
   const unlockHero = () => {
-    if (!heroReady || audioUnlocked || visibilityRatio <= 0) return;
+    if (audioUnlocked) return;
+    if (!heroReady) { pendingUnlock = true; return; }
+    if (visibilityRatio <= 0) return;
     ytPlayer.setVolume(0);
     ytPlayer.unMute();
     ytPlayer.playVideo();
@@ -1884,6 +1887,7 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
         e.target.mute();
         e.target.setVolume(0);
         playHero();
+        if (pendingUnlock) { pendingUnlock = false; unlockHero(); }
       } }
     });
     window.onQuoteYouTubeAPIReady?.();
@@ -2114,6 +2118,7 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
   // Track the visible part of the hero so sound follows the viewport.
   const heroObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
+      const wasVisible = visibilityRatio > 0;
       visibilityRatio = e.isIntersecting ? e.intersectionRatio : 0;
       heroEl.dataset.heroVisibility = visibilityRatio.toFixed(2);
       if (heroVid) heroVid.style.visibility = visibilityRatio > 0 ? 'visible' : 'hidden';
@@ -2122,8 +2127,10 @@ window.addEventListener("DOMContentLoaded", () => { window.siteReady.then(() => 
         volumeFrame = 0;
         setHeroVolume(0);
         if (heroReady) { ytPlayer.mute(); ytPlayer.pauseVideo(); }
-      } else {
+      } else if (!wasVisible) {
         playHero();
+      } else if (audioUnlocked) {
+        scheduleVolume();
       }
     });
   }, { threshold: Array.from({ length: 101 }, (_, i) => i / 100) });
