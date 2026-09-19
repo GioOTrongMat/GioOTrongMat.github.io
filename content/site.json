@@ -22,27 +22,6 @@
         "id": "publish-test-jpg-20mb"
       },
       {
-        "id": "sprite",
-        "name": "Sprite",
-        "image": "/Sprite.png",
-        "fullVideo": "https://drive.google.com/file/d/1Yk5afw7B0xIWbwWMVVksiYArZ0Niu_OQ/view",
-        "legacyPreview": "/Video1.mp4"
-      },
-      {
-        "id": "milo",
-        "name": "Milo",
-        "image": "/Milo.png",
-        "fullVideo": "https://drive.google.com/file/d/18zPZyI1hvWstc7LSCNMHlghcBR4yBb9d/view",
-        "legacyPreview": "/Video2.mp4"
-      },
-      {
-        "id": "rockstar",
-        "name": "Rockstar",
-        "image": "/Rockstar.png",
-        "fullVideo": "https://drive.google.com/file/d/1ZggKZzfy-CwGXVAVjM7gqhkvR5zGAziq/view",
-        "legacyPreview": "/Video3.mp4"
-      },
-      {
         "name": "Đan Viện Thánh Mẫu Châu Sơn",
         "fullVideo": "https://drive.google.com/file/d/1lHAH7IvOqPfM4vWCX8EbwSyqej2jqD8Z/view",
         "image": "https://drive.google.com/file/d/1JoQkAKM4vQh-71xP_vOgIJb4Aj4X-ITy/view?usp=sharing",
