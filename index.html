@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script defer src="assets/content.js?v=5"></script>
 <script defer src="assets/i18n.js?v=1"></script>
-<script defer src="assets/quote-video.js?v=4"></script>
+<script defer src="assets/quote-video.js?v=5"></script>
 <style>
   @font-face {
     font-family: 'Ameyallinda';
@@ -185,17 +185,21 @@
   }
 
   .hero-welcome-popup {
-    position: absolute;
-    top: 56px;
-    left: 120px;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: clamp(140px, 19vw, 290px);
-    aspect-ratio: 969 / 643;
+    aspect-ratio: 970 / 643;
     overflow: hidden;
     z-index: 101;
     pointer-events: none;
-    animation: welcome-float 3.4s ease-in-out infinite;
   }
   .hero-welcome-popup[hidden] { display: none; }
+  .hero-welcome-art {
+    position: absolute;
+    inset: 0;
+    animation: welcome-shake 1.5s linear infinite;
+  }
   .hero-welcome-popup img {
     position: absolute;
     width: 111.5%;
@@ -205,15 +209,17 @@
     height: auto;
     display: block;
   }
-  @keyframes welcome-float {
-    0%, 100% { transform: translateY(0) rotate(-0.5deg); }
-    50% { transform: translateY(-3px) rotate(0.5deg); }
+  @keyframes welcome-shake {
+    0%, 16.667%, 33.333%, 50%, 66.667%, 100% { transform: translateX(0) rotate(0); }
+    4.167%, 20.833%, 37.5%, 54.167% { transform: translateX(3px) rotate(.65deg); }
+    8.333%, 25%, 41.667%, 58.333% { transform: translateX(-3px) rotate(-.65deg); }
+    12.5%, 29.167%, 45.833%, 62.5% { transform: translateX(2px) rotate(.5deg); }
   }
   @media (max-width: 768px) {
-    .hero-welcome-popup { top: 62px; left: clamp(96px, 26vw, 130px); width: clamp(140px, 34vw, 190px); }
+    .hero-welcome-popup { width: clamp(120px, 34vw, 190px); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero-welcome-popup { animation: none; }
+    .hero-welcome-art { animation: none; }
   }
 
   /* Placeholder when no video */
@@ -1326,7 +1332,7 @@
 
   /* ── INSTRUCTOR SECTION ── */
   #instructor {
-    padding: 8rem 3rem;
+    padding: 8rem 3rem 4rem;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     overflow: hidden;
   }
@@ -1336,7 +1342,7 @@
     grid-template-columns: minmax(280px, 400px) 1fr;
     gap: 4rem;
     align-items: start;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
@@ -1458,7 +1464,7 @@
   /* Quote — slides from bottom */
   .instructor-quote-wrap {
     border-top: 1px solid rgba(255,255,255,0.06);
-    padding-top: 3rem;
+    padding-top: 1.5rem;
     opacity: 0;
     transform: translateY(60px);
     transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1492,13 +1498,14 @@
     footer { flex-direction: column; gap: 2rem; text-align: center; }
     .footer-info { text-align: center; }
     .footer-social { justify-content: center; }
-    #works, #process, #instructor { padding: 5rem 1.5rem; }
+    #works, #process { padding: 5rem 1.5rem; }
+    #instructor { padding: 5rem 1.5rem 3rem; }
     #stats { padding: 4rem 1.5rem; }
     .instructor-layout { grid-template-columns: 1fr; gap: 2rem; }
     .instructor-img-placeholder img { max-width: 80%; margin: 0 auto; }
   }
 </style>
-<link rel="stylesheet" href="assets/content.css?v=8">
+<link rel="stylesheet" href="assets/content.css?v=9">
 </head>
 <body>
 
@@ -1532,7 +1539,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-welcome-popup" id="heroWelcomePopup" aria-hidden="true">
-    <img src="assets/welcome-popup.png" alt="" width="1081" height="1081">
+    <div class="hero-welcome-art"><img src="assets/welcome-popup.png" alt="" width="1081" height="1081"></div>
   </div>
   <!-- Fixed video bg fullscreen -->
   <div class="hero-video-wrap">
@@ -1568,17 +1575,45 @@
 </section>
 
 <script>
-// The welcome prompt disappears on the first interaction, even before content finishes loading.
+// Anchor the welcome prompt to the navbar language button.
 (() => {
   const popup = document.getElementById('heroWelcomePopup');
+  const image = popup.querySelector('img');
+  const languageButton = document.querySelector('.language-toggle');
+  const defaultAsset = 'assets/welcome-popup.png';
+  const alternateAsset = 'assets/welcome-popup-alt.png';
+  const alternateImage = new Image();
+  alternateImage.src = alternateAsset;
+  const placePopup = () => {
+    if (!languageButton || popup.hidden) return;
+    const button = languageButton.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const width = Math.min(viewportWidth - 16, viewportWidth <= 768 ?
+      Math.min(190, Math.max(120, viewportWidth * .34)) :
+      Math.min(290, Math.max(140, viewportWidth * .19)));
+    popup.style.width = `${width}px`;
+    popup.style.top = `${button.top}px`;
+    popup.style.right = 'auto';
+    popup.style.left = `${button.left}px`;
+    image.src = defaultAsset;
+    popup.dataset.variant = 'default';
+    const box = popup.getBoundingClientRect();
+    if (box.left < 0 || box.right > viewportWidth) {
+      const alternateWidth = Math.min(width, Math.max(80, button.right - 8));
+      popup.style.width = `${alternateWidth}px`;
+      popup.style.left = `${button.right - alternateWidth}px`;
+      image.src = alternateAsset;
+      popup.dataset.variant = 'alternate';
+    }
+  };
+  placePopup();
+  window.addEventListener('resize', placePopup, { passive: true });
+  window.addEventListener('orientationchange', placePopup, { passive: true });
+  document.querySelector('.language-switch')?.addEventListener('animationend', placePopup);
   const dismiss = () => { popup.hidden = true; };
-  for (const type of ['pointerdown', 'click', 'touchstart', 'keydown', 'wheel']) {
+  for (const type of ['pointerdown', 'click', 'touchstart']) {
     document.addEventListener(type, dismiss, { once: true, passive: true, capture: true });
   }
-  const initialScroll = window.scrollY;
-  document.addEventListener('scroll', () => {
-    if (Math.abs(window.scrollY - initialScroll) > 2) dismiss();
-  }, { passive: true });
 })();
 </script>
 

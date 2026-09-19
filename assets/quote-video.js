@@ -109,7 +109,7 @@
     if (player || !window.portfolioContent) return;
     player = new YT.Player('quoteYT', {
       videoId,
-      playerVars: { autoplay: 0, controls: 0, showinfo: 0, playsinline: 1, rel: 0, modestbranding: 1, fs: 0, disablekb: 1, iv_load_policy: 3, loop: 1, playlist: videoId },
+      playerVars: { autoplay: 0, playsinline: 1, loop: 1, playlist: videoId },
       events: {
         onReady() {
           ready = true;
