@@ -55,7 +55,7 @@
   const silence = () => {
     cancelAnimationFrame(volumeFrame);
     setVolume(0);
-    player?.mute();
+    if (ready) player.mute();
     soundOn = false;
     updateSound();
   };
@@ -109,7 +109,8 @@
     if (player || !window.portfolioContent) return;
     player = new YT.Player('quoteYT', {
       videoId,
-      playerVars: { autoplay: 0, playsinline: 1, loop: 1, playlist: videoId },
+      // Match HeroYT's iframe options; viewport playback still starts through the API.
+      playerVars: { autoplay: 0, mute: 1, loop: 1, playlist: videoId, controls: 0, showinfo: 0, rel: 0, modestbranding: 1, fs: 0, disablekb: 1, iv_load_policy: 3, playsinline: 1, enablejsapi: 1 },
       events: {
         onReady() {
           ready = true;
@@ -147,7 +148,7 @@
       } else {
         section.classList.remove('reveal');
         cancelAnimationFrame(volumeFrame);
-        player?.pauseVideo();
+        if (ready) player.pauseVideo();
         silence();
       }
     }

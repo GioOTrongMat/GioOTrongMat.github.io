@@ -34,7 +34,7 @@
 #ins-quote.reveal .quote-copy,#ins-quote.reveal .quote-video-wrap{opacity:1;transform:translateX(0)}
 #ins-quote .quote-video-frame{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;overflow:hidden}
 #ins-quote .quote-video,#ins-quote iframe#quoteYT{display:block;position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;border:0}
-#ins-quote iframe#quoteYT{transform:none}
+#ins-quote iframe#quoteYT{transform:none;pointer-events:none}
 #ins-quote .quote-author{text-align:center;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.25em;color:var(--mist);margin-top:1.2rem}
 #ins-quote .quote-video-sound{position:absolute;z-index:2;right:12px;bottom:12px;display:grid;place-items:center;width:36px;height:36px;padding:8px;border:1px solid rgba(245,240,232,.35);border-radius:50%;background:rgba(14,12,9,.55);color:var(--cream);cursor:pointer;backdrop-filter:blur(4px)}
 #ins-quote .quote-video-sound svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
