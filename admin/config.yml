@@ -7,8 +7,8 @@
   "local_backend": true,
   "media_folder": "uploads",
   "public_folder": "/uploads",
-  "site_url": "https://giootrongmat.github.io",
-  "display_url": "https://giootrongmat.github.io",
+    "site_url": "https://giootrongmat.com/",
+    "display_url": "https://giootrongmat.com/",
   "locale": "vi",
   "collections": [
     {
